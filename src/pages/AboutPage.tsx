@@ -132,41 +132,6 @@ export default function AboutPage() {
               </motion.div>
             )}
 
-            {/* Core Competencies / Skills Section */}
-            {skills.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mb-12"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-accent">
-                    <Lightbulb className="h-5 w-5" />
-                  </div>
-                  <h2 className="text-2xl font-bold">Core Competencies</h2>
-                </div>
-                <div className="space-y-6">
-                  {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-                    <div key={category} className="bg-card rounded-lg border border-border p-6">
-                      <h3 className="font-semibold text-lg mb-4">{categoryLabels[category] || category}</h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {categorySkills.map((skill) => (
-                          <div key={skill.id} className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span>{skill.name}</span>
-                              <span className="text-muted-foreground">{skill.level}%</span>
-                            </div>
-                            <Progress value={skill.level} className="h-2" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
             {/* Education */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -202,6 +167,7 @@ export default function AboutPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
+                className="mb-12"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-lg bg-accent">
@@ -217,6 +183,40 @@ export default function AboutPage() {
                     >
                       <div className="w-2 h-2 rounded-full gradient-bg" />
                       <span>{highlight}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Core Competencies / Skills Section */}
+            {skills.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-accent">
+                    <Lightbulb className="h-5 w-5" />
+                  </div>
+                  <h2 className="text-2xl font-bold">Core Competencies</h2>
+                </div>
+                <div className="space-y-6">
+                  {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
+                    <div key={category} className="bg-card rounded-lg border border-border p-6">
+                      <h3 className="font-semibold text-lg mb-4">{categoryLabels[category] || category}</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {categorySkills.map((skill) => (
+                          <div key={skill.id} className="space-y-2">
+                            <div className="flex justify-between text-sm">
+                              <span>{skill.name}</span>
+                              <span className="text-muted-foreground">{skill.level}%</span>
+                            </div>
+                            <Progress value={skill.level} className="h-2" />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
