@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Trash2, Eye, EyeOff, Calendar } from 'lucide-react';
+import { Mail, Trash2, Eye, EyeOff, Calendar, Briefcase, Building2 } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,14 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { ContactMessage } from '@/types/portfolio';
+import { ContactMessage, ContactReason } from '@/types/portfolio';
+
+const REASON_LABELS: Record<ContactReason, string> = {
+  'hiring-fulltime': 'Hiring – Full Time',
+  'hiring-internship': 'Hiring – Internship',
+  'freelance': 'Freelance Project',
+  'other': 'Other',
+};
 
 export default function AdminMessagesPage() {
   const { messages, setMessages } = usePortfolio();
@@ -101,6 +108,12 @@ export default function AdminMessagesPage() {
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground">{message.email}</p>
+                  {message.reason && (
+                    <Badge variant="outline" className="mt-1 text-xs">
+                      <Briefcase className="h-3 w-3 mr-1" />
+                      {REASON_LABELS[message.reason]}
+                    </Badge>
+                  )}
                   <p className="text-sm mt-2 line-clamp-2">{message.message}</p>
                 </div>
                 <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
@@ -178,6 +191,24 @@ export default function AdminMessagesPage() {
                     {selectedMessage.email}
                   </a>
                 </div>
+                {selectedMessage.reason && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Reason for Contact</p>
+                    <Badge variant="secondary" className="mt-1">
+                      <Briefcase className="h-3 w-3 mr-1" />
+                      {REASON_LABELS[selectedMessage.reason]}
+                    </Badge>
+                  </div>
+                )}
+                {selectedMessage.company && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Company / Organization</p>
+                    <p className="font-medium flex items-center gap-1">
+                      <Building2 className="h-4 w-4" />
+                      {selectedMessage.company}
+                    </p>
+                  </div>
+                )}
                 <div>
                   <p className="text-sm text-muted-foreground">Date</p>
                   <p className="font-medium">

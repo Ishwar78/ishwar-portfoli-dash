@@ -45,10 +45,14 @@ export interface Blog {
   updatedAt: string;
 }
 
+export type ContactReason = 'hiring-fulltime' | 'hiring-internship' | 'freelance' | 'other';
+
 export interface ContactMessage {
   id: string;
   name: string;
   email: string;
+  reason: ContactReason;
+  company?: string;
   message: string;
   read: boolean;
   createdAt: string;

@@ -8,7 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { ContactReason } from '@/types/portfolio';
+
+const REASON_OPTIONS: { value: ContactReason; label: string }[] = [
+  { value: 'hiring-fulltime', label: 'Hiring – Full Time' },
+  { value: 'hiring-internship', label: 'Hiring – Internship' },
+  { value: 'freelance', label: 'Freelance Project' },
+  { value: 'other', label: 'Other' },
+];
 
 // Zod validation schema
 const contactSchema = z.object({
@@ -23,6 +32,14 @@ const contactSchema = z.object({
     .min(1, { message: 'Email is required' })
     .email({ message: 'Please enter a valid email address' })
     .max(255, { message: 'Email must be less than 255 characters' }),
+  reason: z.enum(['hiring-fulltime', 'hiring-internship', 'freelance', 'other'], {
+    required_error: 'Please select a reason for contact',
+  }),
+  company: z
+    .string()
+    .trim()
+    .max(100, { message: 'Company name must be less than 100 characters' })
+    .optional(),
   message: z
     .string()
     .trim()
@@ -35,6 +52,8 @@ type ContactFormData = z.infer<typeof contactSchema>;
 interface FormErrors {
   name?: string;
   email?: string;
+  reason?: string;
+  company?: string;
   message?: string;
 }
 
@@ -45,13 +64,21 @@ export default function ContactPage() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
+    reason: undefined as unknown as ContactReason,
+    company: '',
     message: '',
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const validateField = (field: keyof ContactFormData, value: string) => {
+  const validateField = (field: keyof ContactFormData, value: string | undefined) => {
     try {
-      contactSchema.shape[field].parse(value);
+      if (field === 'reason') {
+        contactSchema.shape.reason.parse(value);
+      } else if (field === 'company') {
+        contactSchema.shape.company.parse(value);
+      } else {
+        (contactSchema.shape[field] as z.ZodType).parse(value);
+      }
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -62,7 +89,6 @@ export default function ContactPage() {
 
   const handleChange = (field: keyof ContactFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -75,7 +101,6 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate all fields
     const result = contactSchema.safeParse(formData);
     
     if (!result.success) {
@@ -91,17 +116,16 @@ export default function ContactPage() {
     }
 
     setIsSubmitting(true);
-
-    // Simulate submission delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Add message to local storage
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now().toString(),
         name: result.data.name,
         email: result.data.email,
+        reason: result.data.reason,
+        company: result.data.company,
         message: result.data.message,
         read: false,
         createdAt: new Date().toISOString(),
@@ -113,7 +137,7 @@ export default function ContactPage() {
       description: "Thank you for reaching out. I'll get back to you soon.",
     });
 
-    setFormData({ name: '', email: '', message: '' });
+    setFormData({ name: '', email: '', reason: undefined as unknown as ContactReason, company: '', message: '' });
     setErrors({});
     setIsSubmitting(false);
   };
@@ -225,7 +249,7 @@ export default function ContactPage() {
                   <h2 className="text-2xl font-bold mb-6">Send a Message</h2>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <Label htmlFor="name">Name</Label>
+                      <Label htmlFor="name">Name <span className="text-destructive">*</span></Label>
                       <Input
                         id="name"
                         placeholder="Your name"
@@ -243,7 +267,7 @@ export default function ContactPage() {
                       )}
                     </div>
                     <div>
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">Email <span className="text-destructive">*</span></Label>
                       <Input
                         id="email"
                         type="email"
@@ -262,15 +286,57 @@ export default function ContactPage() {
                       )}
                     </div>
                     <div>
+                      <Label htmlFor="reason">Reason for Contact <span className="text-destructive">*</span></Label>
+                      <Select
+                        value={formData.reason}
+                        onValueChange={(value) => handleChange('reason', value)}
+                      >
+                        <SelectTrigger className={`mt-1 ${errors.reason ? 'border-destructive' : ''}`}>
+                          <SelectValue placeholder="Select a reason" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover">
+                          {REASON_OPTIONS.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors.reason && (
+                        <p className="text-sm text-destructive mt-1 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {errors.reason}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="company">Company / Organization</Label>
+                      <Input
+                        id="company"
+                        placeholder="Your company or organization (optional)"
+                        value={formData.company}
+                        onChange={(e) => handleChange('company', e.target.value)}
+                        onBlur={() => handleBlur('company')}
+                        className={`mt-1 ${errors.company ? 'border-destructive' : ''}`}
+                        maxLength={100}
+                      />
+                      {errors.company && (
+                        <p className="text-sm text-destructive mt-1 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {errors.company}
+                        </p>
+                      )}
+                    </div>
+                    <div>
                       <Label htmlFor="message">
-                        Message
+                        Message <span className="text-destructive">*</span>
                         <span className="text-muted-foreground text-xs ml-2">
                           ({formData.message.length}/1000)
                         </span>
                       </Label>
                       <Textarea
                         id="message"
-                        placeholder="Tell me about your project..."
+                        placeholder="Please include details such as the role you're hiring for, job type (remote/on-site/hybrid), and location..."
                         value={formData.message}
                         onChange={(e) => handleChange('message', e.target.value)}
                         onBlur={() => handleBlur('message')}
