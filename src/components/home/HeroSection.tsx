@@ -6,22 +6,40 @@ import { usePortfolio } from '@/contexts/PortfolioContext';
 import { TypewriterText } from './TypewriterText';
 import ishwarProfileDefault from '@/assets/ishwar-profile.jpeg';
 
+// Refined animation variants - minimal, smooth, professional
+const easeOut = [0.25, 0.46, 0.45, 0.94] as const;
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 15 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5 },
+    transition: { 
+      duration: 0.4,
+      ease: easeOut as unknown as [number, number, number, number],
+    },
+  },
+};
+
+const imageVariants = {
+  hidden: { opacity: 0, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { 
+      duration: 0.5,
+      ease: easeOut as unknown as [number, number, number, number],
+    },
   },
 };
 
@@ -50,10 +68,28 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-grid opacity-30" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
       
-      {/* Floating orbs */}
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl animate-float" style={{ animationDelay: '-1.5s' }} />
-      <div className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full bg-accent/30 blur-3xl animate-float" style={{ animationDelay: '-0.7s' }} />
+      {/* Floating orbs - subtle animation */}
+      <motion.div 
+        className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-primary/20 blur-3xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        style={{ animation: 'float 6s ease-in-out infinite' }}
+      />
+      <motion.div 
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '-1.5s' }}
+      />
+      <motion.div 
+        className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full bg-accent/30 blur-3xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.7 }}
+        style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '-0.7s' }}
+      />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
@@ -64,20 +100,33 @@ export function HeroSection() {
         >
           {/* Profile Image */}
           <motion.div 
-            variants={itemVariants}
+            variants={imageVariants}
             className="flex-shrink-0 order-1 lg:order-2"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/50 to-accent/50 rounded-2xl blur-2xl opacity-50 animate-pulse" />
-              <img
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-primary/50 to-accent/50 rounded-2xl blur-2xl opacity-50"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.5 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              />
+              <motion.img
                 src={heroImage}
                 alt={siteSettings.name}
                 className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover rounded-2xl border-2 border-primary/20 shadow-2xl"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
               />
               {experienceYears && (
-                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg">
+                <motion.div 
+                  className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  whileHover={{ scale: 1.05 }}
+                >
                   {experienceYears}
-                </div>
+                </motion.div>
               )}
             </div>
           </motion.div>
@@ -124,13 +173,20 @@ export function HeroSection() {
               className="flex flex-wrap justify-center lg:justify-start gap-4"
             >
               <Link to="/projects">
-                <Button size="lg" className="gradient-bg text-primary-foreground hover:opacity-90 glow h-12 px-8">
+                <Button 
+                  size="lg" 
+                  className="gradient-bg text-primary-foreground hover:opacity-90 glow h-12 px-8 transition-all duration-200 hover:-translate-y-0.5"
+                >
                   View Projects
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button size="lg" variant="outline" className="h-12 px-8 border-primary/30 hover:bg-primary/10 hover:border-primary/50">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="h-12 px-8 border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-200 hover:-translate-y-0.5"
+                >
                   Contact Me
                   <Mail className="ml-2 h-4 w-4" />
                 </Button>
@@ -139,7 +195,7 @@ export function HeroSection() {
                 size="lg" 
                 variant="ghost" 
                 onClick={handleDownloadResume}
-                className="h-12 px-8 hover:bg-primary/10"
+                className="h-12 px-8 hover:bg-primary/10 transition-all duration-200 hover:-translate-y-0.5"
               >
                 Download CV
                 <Download className="ml-2 h-4 w-4" />
@@ -152,41 +208,49 @@ export function HeroSection() {
               className="flex justify-center lg:justify-start gap-4 mt-10"
             >
               {siteSettings.github && (
-                <a
+                <motion.a
                   href={siteSettings.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <Github className="h-5 w-5" />
-                </a>
+                </motion.a>
               )}
               {siteSettings.linkedin && (
-                <a
+                <motion.a
                   href={siteSettings.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <Linkedin className="h-5 w-5" />
-                </a>
+                </motion.a>
               )}
               {siteSettings.twitter && (
-                <a
+                <motion.a
                   href={siteSettings.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-200"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <Twitter className="h-5 w-5" />
-                </a>
+                </motion.a>
               )}
-              <a
+              <motion.a
                 href={`mailto:${siteSettings.email}`}
-                className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <Mail className="h-5 w-5" />
-              </a>
+              </motion.a>
             </motion.div>
           </div>
         </motion.div>
@@ -196,12 +260,12 @@ export function HeroSection() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 1.2, duration: 0.4 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-2 text-muted-foreground"
         >
           <span className="text-xs uppercase tracking-widest">Scroll</span>
