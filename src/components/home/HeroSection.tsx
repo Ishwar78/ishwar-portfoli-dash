@@ -31,6 +31,11 @@ export function HeroSection() {
   // Use custom hero image if set, otherwise use default
   const heroImage = siteSettings.heroImage || ishwarProfileDefault;
   const experienceYears = siteSettings.experienceYears || '5+ YRS';
+  
+  // Use custom typing roles if set, otherwise use defaults
+  const typingRoles = siteSettings.typingRoles?.length 
+    ? siteSettings.typingRoles 
+    : [siteSettings.role, 'React Developer', 'Node.js Engineer', 'Problem Solver', 'Tech Enthusiast'];
 
   const handleDownloadResume = () => {
     const resumeUrl = '/resume.pdf';
@@ -100,13 +105,7 @@ export function HeroSection() {
               className="text-xl md:text-2xl lg:text-3xl text-muted-foreground mb-6 font-medium h-[1.5em]"
             >
               <TypewriterText
-                texts={[
-                  siteSettings.role,
-                  'React Developer',
-                  'Node.js Engineer',
-                  'Problem Solver',
-                  'Tech Enthusiast',
-                ]}
+                texts={typingRoles}
                 typingSpeed={80}
                 deletingSpeed={40}
                 pauseDuration={2500}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Save } from 'lucide-react';
+import { Save, Plus, X } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,29 @@ export default function AdminSettingsPage() {
   const { siteSettings, setSiteSettings } = usePortfolio();
   const { toast } = useToast();
   const [formData, setFormData] = useState(siteSettings);
+  const [typingRoles, setTypingRoles] = useState<string[]>(
+    siteSettings.typingRoles?.length 
+      ? siteSettings.typingRoles 
+      : ['Full Stack Developer', 'React Developer', 'Node.js Engineer']
+  );
+
+  const addTypingRole = () => {
+    setTypingRoles([...typingRoles, '']);
+  };
+
+  const removeTypingRole = (index: number) => {
+    setTypingRoles(typingRoles.filter((_, i) => i !== index));
+  };
+
+  const updateTypingRole = (index: number, value: string) => {
+    const updated = [...typingRoles];
+    updated[index] = value;
+    setTypingRoles(updated);
+  };
 
   const handleSave = () => {
-    setSiteSettings(formData);
+    const filteredRoles = typingRoles.filter(role => role.trim() !== '');
+    setSiteSettings({ ...formData, typingRoles: filteredRoles });
     toast({ title: 'Settings saved successfully' });
   };
 
@@ -64,6 +84,38 @@ export default function AdminSettingsPage() {
                   className="mt-1"
                 />
                 <p className="text-xs text-muted-foreground mt-1">Leave empty to hide the badge</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Typing Roles</Label>
+                  <Button type="button" variant="outline" size="sm" onClick={addTypingRole}>
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Role
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">These roles will cycle through in the hero section</p>
+                <div className="space-y-2">
+                  {typingRoles.map((role, index) => (
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={role}
+                        onChange={(e) => updateTypingRole(index, e.target.value)}
+                        placeholder="e.g., Full Stack Developer"
+                      />
+                      {typingRoles.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeTypingRole(index)}
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
