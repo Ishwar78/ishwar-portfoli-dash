@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { FileUpload } from '@/components/admin/FileUpload';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminSettingsPage() {
@@ -116,6 +117,29 @@ export default function AdminSettingsPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Resume Upload */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Resume / CV</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label>Upload Resume</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Upload your resume as PDF or image. This will be used for the "Download CV" button.
+                </p>
+                <FileUpload
+                  value={formData.resumeUrl || ''}
+                  onChange={(url) =>
+                    setFormData((prev) => ({ ...prev, resumeUrl: url }))
+                  }
+                  placeholder="Upload your resume (PDF or Image)"
+                  maxSizeMB={10}
+                />
               </div>
             </CardContent>
           </Card>

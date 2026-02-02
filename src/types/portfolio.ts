@@ -80,6 +80,7 @@ export interface SiteSettings {
   typingRoles?: string[];
   heroImage?: string;
   experienceYears?: string;
+  resumeUrl?: string;
 }
 
 export interface Testimonial {

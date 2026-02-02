@@ -15,11 +15,10 @@ export default function HomePage() {
   const topSkills = skills.slice(0, 6);
 
   const handleDownloadResume = () => {
-    const resumeUrl = '/resume.pdf';
-    const link = document.createElement('a');
-    link.href = resumeUrl;
-    link.download = `${siteSettings.name.replace(/\s+/g, '_')}_Resume.pdf`;
-    link.click();
+    const resumeUrl = siteSettings.resumeUrl || '/resume.pdf';
+    if (resumeUrl) {
+      window.open(resumeUrl, '_blank');
+    }
   };
 
   return (
