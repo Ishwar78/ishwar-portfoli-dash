@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { Project, Skill, Experience, Blog, ContactMessage, AboutContent, SiteSettings } from '@/types/portfolio';
+import { Project, Skill, Experience, Blog, ContactMessage, AboutContent, SiteSettings, Testimonial } from '@/types/portfolio';
 
 interface PortfolioContextType {
   // Projects
@@ -22,6 +22,10 @@ interface PortfolioContextType {
   // Contact Messages
   messages: ContactMessage[];
   setMessages: (messages: ContactMessage[] | ((prev: ContactMessage[]) => ContactMessage[])) => void;
+  
+  // Testimonials
+  testimonials: Testimonial[];
+  setTestimonials: (testimonials: Testimonial[] | ((prev: Testimonial[]) => Testimonial[])) => void;
   
   // About Content
   aboutContent: AboutContent;
@@ -142,6 +146,36 @@ const defaultBlogs: Blog[] = [
   },
 ];
 
+const defaultTestimonials: Testimonial[] = [
+  {
+    id: '1',
+    name: 'Sarah Chen',
+    role: 'Product Manager',
+    company: 'TechCorp Inc.',
+    content: 'Working with this developer was an absolute pleasure. They delivered a high-quality product on time and exceeded our expectations. The attention to detail and clean code was impressive.',
+    rating: 5,
+    avatar: '',
+  },
+  {
+    id: '2',
+    name: 'Michael Rodriguez',
+    role: 'CTO',
+    company: 'StartupX',
+    content: 'Exceptional problem-solving skills and great communication throughout the project. They understood our vision and turned it into reality. Highly recommend for any complex web application.',
+    rating: 5,
+    avatar: '',
+  },
+  {
+    id: '3',
+    name: 'Emily Watson',
+    role: 'Design Lead',
+    company: 'Creative Agency',
+    content: 'A rare blend of technical expertise and design sensibility. The final product was not only functional but beautifully crafted. Will definitely work together again.',
+    rating: 5,
+    avatar: '',
+  },
+];
+
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export function PortfolioProvider({ children }: { children: ReactNode }) {
@@ -150,6 +184,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [experiences, setExperiences] = useLocalStorage<Experience[]>('portfolio-experiences', defaultExperiences);
   const [blogs, setBlogs] = useLocalStorage<Blog[]>('portfolio-blogs', defaultBlogs);
   const [messages, setMessages] = useLocalStorage<ContactMessage[]>('portfolio-messages', []);
+  const [testimonials, setTestimonials] = useLocalStorage<Testimonial[]>('portfolio-testimonials', defaultTestimonials);
   const [aboutContent, setAboutContent] = useLocalStorage<AboutContent>('portfolio-about', defaultAboutContent);
   const [siteSettings, setSiteSettings] = useLocalStorage<SiteSettings>('portfolio-settings', defaultSiteSettings);
   const [isAdmin, setIsAdmin] = useLocalStorage<boolean>('portfolio-admin', false);
@@ -167,6 +202,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         setBlogs,
         messages,
         setMessages,
+        testimonials,
+        setTestimonials,
         aboutContent,
         setAboutContent,
         siteSettings,
