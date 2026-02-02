@@ -164,8 +164,7 @@ export function HeroSection() {
               variants={itemVariants}
               className="text-lg text-muted-foreground mb-10 max-w-2xl leading-relaxed"
             >
-              {siteSettings.tagline}. I craft elegant, scalable web applications
-              using modern technologies like React, Node.js, and cloud platforms.
+              {siteSettings.tagline}. {siteSettings.heroDescription || 'I craft elegant, scalable web applications using modern technologies like React, Node.js, and cloud platforms.'}
             </motion.p>
 
             <motion.div
