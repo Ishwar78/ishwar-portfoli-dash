@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X, Sun, Moon, Github, Linkedin, Twitter } from 'lucide-react';
+import { Menu, X, Sun, Moon, Github, Linkedin, Mail } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -32,8 +32,9 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="text-xl font-bold gradient-text">
-            {siteSettings.name}
+          <Link to="/" className="text-xl font-bold">
+            <span className="gradient-text">{siteSettings.name}</span>
+            <span className="text-primary">.</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -43,10 +44,10 @@ export function Header() {
                 key={link.href}
                 to={link.href}
                 className={cn(
-                  "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
                   location.pathname === link.href
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 )}
               >
                 {link.label}
@@ -57,17 +58,17 @@ export function Header() {
           {/* Actions */}
           <div className="flex items-center gap-2">
             {/* Social Links */}
-            <div className="hidden sm:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-1">
               {siteSettings.github && (
                 <a href={siteSettings.github} target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 hover:bg-primary/10 hover:text-primary">
                     <Github className="h-4 w-4" />
                   </Button>
                 </a>
               )}
               {siteSettings.linkedin && (
                 <a href={siteSettings.linkedin} target="_blank" rel="noopener noreferrer">
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Button variant="ghost" size="icon" className="h-9 w-9 hover:bg-primary/10 hover:text-primary">
                     <Linkedin className="h-4 w-4" />
                   </Button>
                 </a>
@@ -79,7 +80,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="h-9 w-9"
+              className="h-9 w-9 hover:bg-primary/10 hover:text-primary"
             >
               {theme === 'dark' ? (
                 <Sun className="h-4 w-4" />
@@ -95,7 +96,7 @@ export function Header() {
               className="md:hidden h-9 w-9"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
@@ -115,10 +116,10 @@ export function Header() {
                   to={link.href}
                   onClick={() => setIsMenuOpen(false)}
                   className={cn(
-                    "px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                    "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                     location.pathname === link.href
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                 >
                   {link.label}

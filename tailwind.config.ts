@@ -72,8 +72,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "Menlo", "monospace"],
+        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["JetBrains Mono", "Fira Code", "Menlo", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -103,6 +103,10 @@ export default {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        "gradient-x": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -112,6 +116,10 @@ export default {
         "slide-in-left": "slide-in-left 0.5s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         shimmer: "shimmer 2s infinite",
+        "gradient-x": "gradient-x 3s ease infinite",
+      },
+      backgroundSize: {
+        "200%": "200% 200%",
       },
     },
   },
