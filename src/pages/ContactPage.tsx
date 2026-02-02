@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Send, Github, Linkedin, Twitter, AlertCircle } from 'lucide-react';
+import { Mail, Send, Github, Linkedin, Twitter, AlertCircle, Phone } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -32,6 +32,13 @@ const contactSchema = z.object({
     .min(1, { message: 'Email is required' })
     .email({ message: 'Please enter a valid email address' })
     .max(255, { message: 'Email must be less than 255 characters' }),
+  phone: z
+    .string()
+    .trim()
+    .max(20, { message: 'Phone number must be less than 20 characters' })
+    .regex(/^[\d\s\-\+\(\)]*$/, { message: 'Please enter a valid phone number' })
+    .optional()
+    .or(z.literal('')),
   reason: z.enum(['hiring-fulltime', 'hiring-internship', 'freelance', 'other'], {
     required_error: 'Please select a reason for contact',
   }),
@@ -52,6 +59,7 @@ type ContactFormData = z.infer<typeof contactSchema>;
 interface FormErrors {
   name?: string;
   email?: string;
+  phone?: string;
   reason?: string;
   company?: string;
   message?: string;
@@ -64,6 +72,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
+    phone: '',
     reason: undefined as unknown as ContactReason,
     company: '',
     message: '',
@@ -76,8 +85,9 @@ export default function ContactPage() {
         contactSchema.shape.reason.parse(value);
       } else if (field === 'company') {
         contactSchema.shape.company.parse(value);
+      } else if (field === 'phone') {
+        contactSchema.shape.phone.parse(value);
       } else {
-        (contactSchema.shape[field] as z.ZodType).parse(value);
       }
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     } catch (error) {
@@ -124,6 +134,7 @@ export default function ContactPage() {
         id: Date.now().toString(),
         name: result.data.name,
         email: result.data.email,
+        phone: result.data.phone || undefined,
         reason: result.data.reason,
         company: result.data.company,
         message: result.data.message,
@@ -137,7 +148,7 @@ export default function ContactPage() {
       description: "Thank you for reaching out. I'll get back to you soon.",
     });
 
-    setFormData({ name: '', email: '', reason: undefined as unknown as ContactReason, company: '', message: '' });
+    setFormData({ name: '', email: '', phone: '', reason: undefined as unknown as ContactReason, company: '', message: '' });
     setErrors({});
     setIsSubmitting(false);
   };
@@ -282,6 +293,25 @@ export default function ContactPage() {
                         <p className="text-sm text-destructive mt-1 flex items-center gap-1">
                           <AlertCircle className="h-3 w-3" />
                           {errors.email}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Mobile Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        value={formData.phone}
+                        onChange={(e) => handleChange('phone', e.target.value)}
+                        onBlur={() => handleBlur('phone')}
+                        className={`mt-1 ${errors.phone ? 'border-destructive' : ''}`}
+                        maxLength={20}
+                      />
+                      {errors.phone && (
+                        <p className="text-sm text-destructive mt-1 flex items-center gap-1">
+                          <AlertCircle className="h-3 w-3" />
+                          {errors.phone}
                         </p>
                       )}
                     </div>

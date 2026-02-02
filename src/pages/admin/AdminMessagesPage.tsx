@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Trash2, Eye, EyeOff, Calendar, Briefcase, Building2 } from 'lucide-react';
+import { Mail, Trash2, Eye, EyeOff, Calendar, Briefcase, Building2, Phone } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Button } from '@/components/ui/button';
@@ -107,13 +107,29 @@ export default function AdminMessagesPage() {
                       {new Date(message.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{message.email}</p>
-                  {message.reason && (
-                    <Badge variant="outline" className="mt-1 text-xs">
-                      <Briefcase className="h-3 w-3 mr-1" />
-                      {REASON_LABELS[message.reason]}
-                    </Badge>
-                  )}
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <span>{message.email}</span>
+                    {message.phone && (
+                      <span className="flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {message.phone}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {message.reason && (
+                      <Badge variant="outline" className="text-xs">
+                        <Briefcase className="h-3 w-3 mr-1" />
+                        {REASON_LABELS[message.reason]}
+                      </Badge>
+                    )}
+                    {message.company && (
+                      <Badge variant="outline" className="text-xs">
+                        <Building2 className="h-3 w-3 mr-1" />
+                        {message.company}
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-sm mt-2 line-clamp-2">{message.message}</p>
                 </div>
                 <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
@@ -191,6 +207,18 @@ export default function AdminMessagesPage() {
                     {selectedMessage.email}
                   </a>
                 </div>
+                {selectedMessage.phone && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <a
+                      href={`tel:${selectedMessage.phone}`}
+                      className="font-medium text-primary hover:underline flex items-center gap-1"
+                    >
+                      <Phone className="h-4 w-4" />
+                      {selectedMessage.phone}
+                    </a>
+                  </div>
+                )}
                 {selectedMessage.reason && (
                   <div>
                     <p className="text-sm text-muted-foreground">Reason for Contact</p>
