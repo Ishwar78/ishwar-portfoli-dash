@@ -1,12 +1,62 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FolderKanban, FileText, MessageSquare, Eye, TrendingUp, Users } from 'lucide-react';
+import { FolderKanban, FileText, MessageSquare, TrendingUp, Download, Smartphone, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
 
 export default function AdminDashboardPage() {
-  const { projects, blogs, messages, skills, experiences } = usePortfolio();
+  const { projects, blogs, messages, skills } = usePortfolio();
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showIOSInstructions, setShowIOSInstructions] = useState(false);
+
+  useEffect(() => {
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    // Detect iOS
+    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    setIsIOS(isIOSDevice);
+
+    // Listen for beforeinstallprompt
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (isIOS) {
+      setShowIOSInstructions(true);
+      return;
+    }
+
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
+      }
+      setDeferredPrompt(null);
+    }
+  };
 
   const unreadMessages = messages.filter((m) => !m.read).length;
 
@@ -49,11 +99,64 @@ export default function AdminDashboardPage() {
   return (
     <AdminLayout>
       <div className="space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome to your admin panel</p>
+        {/* Header with PWA Install */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <p className="text-muted-foreground">Welcome to your admin panel</p>
+          </div>
+          
+          {/* PWA Install Button */}
+          {!isInstalled ? (
+            <Button
+              onClick={handleInstallClick}
+              className="gradient-bg text-white gap-2"
+              disabled={!deferredPrompt && !isIOS}
+            >
+              <Download className="h-4 w-4" />
+              Install Admin App
+            </Button>
+          ) : (
+            <div className="flex items-center gap-2 text-green-500">
+              <CheckCircle className="h-5 w-5" />
+              <span className="text-sm font-medium">App Installed</span>
+            </div>
+          )}
         </div>
+
+        {/* iOS Instructions Modal */}
+        {showIOSInstructions && isIOS && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="border-primary">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Smartphone className="h-5 w-5" />
+                  Install on iOS
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  To install the Admin App on your iOS device:
+                </p>
+                <ol className="list-decimal list-inside space-y-2 text-sm">
+                  <li>Tap the <strong>Share</strong> button in Safari</li>
+                  <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                  <li>Tap <strong>"Add"</strong> to confirm</li>
+                </ol>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowIOSInstructions(false)}
+                >
+                  Got it
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
