@@ -13,6 +13,7 @@ import {
   LogOut,
   Menu,
   X,
+  Quote,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ const sidebarLinks = [
   { href: '/admin/about', label: 'About', icon: User },
   { href: '/admin/skills', label: 'Skills', icon: Lightbulb },
   { href: '/admin/experience', label: 'Experience', icon: Briefcase },
+  { href: '/admin/testimonials', label: 'Testimonials', icon: Quote },
   { href: '/admin/blogs', label: 'Blogs', icon: FileText },
   { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { href: '/admin/settings', label: 'Settings', icon: Settings },

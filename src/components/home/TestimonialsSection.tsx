@@ -2,48 +2,15 @@ import { motion } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-interface Testimonial {
-  id: string;
-  name: string;
-  role: string;
-  company: string;
-  content: string;
-  rating: number;
-  avatar?: string;
-}
-
-const testimonials: Testimonial[] = [
-  {
-    id: '1',
-    name: 'Sarah Chen',
-    role: 'Product Manager',
-    company: 'TechCorp Inc.',
-    content: 'Working with this developer was an absolute pleasure. They delivered a high-quality product on time and exceeded our expectations. The attention to detail and clean code was impressive.',
-    rating: 5,
-    avatar: '',
-  },
-  {
-    id: '2',
-    name: 'Michael Rodriguez',
-    role: 'CTO',
-    company: 'StartupX',
-    content: 'Exceptional problem-solving skills and great communication throughout the project. They understood our vision and turned it into reality. Highly recommend for any complex web application.',
-    rating: 5,
-    avatar: '',
-  },
-  {
-    id: '3',
-    name: 'Emily Watson',
-    role: 'Design Lead',
-    company: 'Creative Agency',
-    content: 'A rare blend of technical expertise and design sensibility. The final product was not only functional but beautifully crafted. Will definitely work together again.',
-    rating: 5,
-    avatar: '',
-  },
-];
+import { usePortfolio } from '@/contexts/PortfolioContext';
 
 export function TestimonialsSection() {
+  const { testimonials } = usePortfolio();
+
+  if (testimonials.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background decoration */}

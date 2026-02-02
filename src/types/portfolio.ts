@@ -71,3 +71,13 @@ export interface SiteSettings {
   linkedin?: string;
   twitter?: string;
 }
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  content: string;
+  rating: number;
+  avatar?: string;
+}
