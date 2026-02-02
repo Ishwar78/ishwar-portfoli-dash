@@ -38,11 +38,10 @@ export function HeroSection() {
     : [siteSettings.role, 'React Developer', 'Node.js Engineer', 'Problem Solver', 'Tech Enthusiast'];
 
   const handleDownloadResume = () => {
-    const resumeUrl = '/resume.pdf';
-    const link = document.createElement('a');
-    link.href = resumeUrl;
-    link.download = `${siteSettings.name.replace(/\s+/g, '_')}_Resume.pdf`;
-    link.click();
+    const resumeUrl = siteSettings.resumeUrl || '/resume.pdf';
+    if (resumeUrl) {
+      window.open(resumeUrl, '_blank');
+    }
   };
 
   return (
