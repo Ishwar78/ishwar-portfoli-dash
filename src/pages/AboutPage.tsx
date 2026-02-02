@@ -1,15 +1,40 @@
 import { motion } from 'framer-motion';
-import { User, Briefcase, GraduationCap, Award } from 'lucide-react';
+import { Briefcase, GraduationCap, Award, Lightbulb, Building2 } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 
 export default function AboutPage() {
-  const { aboutContent, siteSettings } = usePortfolio();
+  const { aboutContent, siteSettings, skills, experiences } = usePortfolio();
 
   // Handle legacy string format for education
   const educationList = Array.isArray(aboutContent.education) 
     ? aboutContent.education 
     : [{ id: '1', degree: String(aboutContent.education || ''), institution: '', year: '' }];
+
+  // Group skills by category
+  const skillsByCategory = skills.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
+    }
+    acc[skill.category].push(skill);
+    return acc;
+  }, {} as Record<string, typeof skills>);
+
+  const categoryLabels: Record<string, string> = {
+    frontend: 'Frontend',
+    backend: 'Backend',
+    database: 'Database',
+    tools: 'Tools & Others',
+  };
+
+  // Sort experiences by date
+  const sortedExperiences = [...experiences].sort((a, b) => {
+    if (a.current) return -1;
+    if (b.current) return 1;
+    return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+  });
 
   return (
     <MainLayout>
@@ -75,11 +100,78 @@ export default function AboutPage() {
               </div>
             </motion.div>
 
+            {/* Experience Section */}
+            {sortedExperiences.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="mb-12"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-accent">
+                    <Building2 className="h-5 w-5" />
+                  </div>
+                  <h2 className="text-2xl font-bold">Experience</h2>
+                </div>
+                <div className="space-y-4">
+                  {sortedExperiences.map((exp) => (
+                    <div key={exp.id} className="bg-card rounded-lg border border-border p-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                        <h3 className="font-semibold text-lg">{exp.role}</h3>
+                        {exp.current && (
+                          <Badge variant="secondary" className="w-fit">Current</Badge>
+                        )}
+                      </div>
+                      <p className="text-primary font-medium">{exp.company}</p>
+                      <p className="text-muted-foreground text-sm mb-3">{exp.duration}</p>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{exp.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Core Competencies / Skills Section */}
+            {skills.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mb-12"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-lg bg-accent">
+                    <Lightbulb className="h-5 w-5" />
+                  </div>
+                  <h2 className="text-2xl font-bold">Core Competencies</h2>
+                </div>
+                <div className="space-y-6">
+                  {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
+                    <div key={category} className="bg-card rounded-lg border border-border p-6">
+                      <h3 className="font-semibold text-lg mb-4">{categoryLabels[category] || category}</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {categorySkills.map((skill) => (
+                          <div key={skill.id} className="space-y-2">
+                            <div className="flex justify-between text-sm">
+                              <span>{skill.name}</span>
+                              <span className="text-muted-foreground">{skill.level}%</span>
+                            </div>
+                            <Progress value={skill.level} className="h-2" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {/* Education */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 0.35 }}
               className="mb-12"
             >
               <div className="flex items-center gap-3 mb-4">
