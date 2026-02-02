@@ -51,6 +51,7 @@ export interface ContactMessage {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   reason: ContactReason;
   company?: string;
   message: string;
