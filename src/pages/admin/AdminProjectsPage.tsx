@@ -334,10 +334,37 @@ export default function AdminProjectsPage() {
                   id="images"
                   value={imagesInput}
                   onChange={(e) => setImagesInput(e.target.value)}
-                  placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                  placeholder="https://images.unsplash.com/photo-xxx&#10;https://imgur.com/xxx.jpg"
                   rows={3}
                   className="mt-1"
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Use Unsplash, Imgur, or any image hosting service
+                </p>
+                {/* Image Previews */}
+                {imagesInput.trim() && (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {imagesInput
+                      .split('\n')
+                      .map((url) => url.trim())
+                      .filter(Boolean)
+                      .map((url, idx) => (
+                        <div
+                          key={idx}
+                          className="relative w-20 h-14 rounded border border-border overflow-hidden bg-muted"
+                        >
+                          <img
+                            src={url}
+                            alt={`Preview ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      ))}
+                  </div>
+                )}
               </div>
 
               {/* README Editor */}
