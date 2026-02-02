@@ -1,85 +1,102 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
+
+// Global in-memory cache to ensure all hooks share the same data
+const cache = new Map<string, unknown>();
+const subscribers = new Map<string, Set<() => void>>();
+
+function getSnapshot<T>(key: string, initialValue: T): T {
+  if (cache.has(key)) {
+    return cache.get(key) as T;
+  }
+  
+  if (typeof window === 'undefined') {
+    return initialValue;
+  }
+
+  try {
+    const item = window.localStorage.getItem(key);
+    const value = item ? (JSON.parse(item) as T) : initialValue;
+    cache.set(key, value);
+    return value;
+  } catch (error) {
+    console.warn(`Error reading localStorage key "${key}":`, error);
+    return initialValue;
+  }
+}
+
+function subscribe(key: string, callback: () => void): () => void {
+  if (!subscribers.has(key)) {
+    subscribers.set(key, new Set());
+  }
+  subscribers.get(key)!.add(callback);
+  
+  return () => {
+    subscribers.get(key)?.delete(callback);
+  };
+}
+
+function notifySubscribers(key: string): void {
+  subscribers.get(key)?.forEach((callback) => callback());
+}
 
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
-  // Use a ref to always have access to the latest value without causing re-renders
-  const storedValueRef = useRef<T>(initialValue);
-  
-  const readValue = useCallback((): T => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
+  // Initialize cache on first access
+  if (!cache.has(key)) {
+    getSnapshot(key, initialValue);
+  }
 
-    try {
-      const item = window.localStorage.getItem(key);
-      const parsedValue = item ? (JSON.parse(item) as T) : initialValue;
-      storedValueRef.current = parsedValue;
-      return parsedValue;
-    } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
-    }
-  }, [initialValue, key]);
-
-  const [storedValue, setStoredValue] = useState<T>(readValue);
-
-  // Keep ref in sync with state
-  useEffect(() => {
-    storedValueRef.current = storedValue;
-  }, [storedValue]);
+  // Use useSyncExternalStore for proper synchronization across components
+  const storedValue = useSyncExternalStore(
+    (callback) => subscribe(key, callback),
+    () => getSnapshot(key, initialValue),
+    () => initialValue
+  );
 
   const setValue = useCallback((value: T | ((prev: T) => T)) => {
     try {
-      // Use ref to get the latest value to avoid stale closures
-      const currentValue = storedValueRef.current;
+      const currentValue = cache.get(key) as T ?? initialValue;
       const newValue = value instanceof Function ? value(currentValue) : value;
+      
+      // Update cache immediately
+      cache.set(key, newValue);
       
       // Save to localStorage
       window.localStorage.setItem(key, JSON.stringify(newValue));
       
-      // Update ref immediately
-      storedValueRef.current = newValue;
+      // Notify all subscribers (including this component)
+      notifySubscribers(key);
       
-      // Update state
-      setStoredValue(newValue);
-      
-      // Dispatch event for cross-component sync
-      window.dispatchEvent(new CustomEvent('local-storage', { detail: { key } }));
+      // Dispatch event for cross-tab sync
+      window.dispatchEvent(new StorageEvent('storage', {
+        key,
+        newValue: JSON.stringify(newValue),
+        oldValue: JSON.stringify(currentValue),
+        storageArea: localStorage,
+      }));
     } catch (error) {
       console.warn(`Error setting localStorage key "${key}":`, error);
     }
-  }, [key]);
+  }, [key, initialValue]);
 
-  // Initialize from localStorage on mount
+  // Listen for storage changes from other tabs
   useEffect(() => {
-    const value = readValue();
-    setStoredValue(value);
-  }, []);
-
-  // Listen for storage changes (from other tabs or components)
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent | CustomEvent) => {
-      // For CustomEvent (same tab), check if it's for this key
-      if (event instanceof CustomEvent && event.detail?.key !== key) {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key !== key || event.storageArea !== localStorage) {
         return;
       }
       
-      // For StorageEvent (other tabs), check the key
-      if (event instanceof StorageEvent && event.key !== key) {
-        return;
+      try {
+        const newValue = event.newValue ? JSON.parse(event.newValue) : initialValue;
+        cache.set(key, newValue);
+        notifySubscribers(key);
+      } catch (error) {
+        console.warn(`Error parsing storage event for key "${key}":`, error);
       }
-      
-      const value = readValue();
-      setStoredValue(value);
     };
 
-    window.addEventListener('storage', handleStorageChange as EventListener);
-    window.addEventListener('local-storage', handleStorageChange as EventListener);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange as EventListener);
-      window.removeEventListener('local-storage', handleStorageChange as EventListener);
-    };
-  }, [key, readValue]);
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [key, initialValue]);
 
   return [storedValue, setValue];
 }
