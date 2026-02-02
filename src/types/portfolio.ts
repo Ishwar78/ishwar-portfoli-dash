@@ -54,10 +54,17 @@ export interface ContactMessage {
   createdAt: string;
 }
 
+export interface Education {
+  id: string;
+  degree: string;
+  institution: string;
+  year: string;
+}
+
 export interface AboutContent {
   bio: string;
   careerSummary: string;
-  education: string;
+  education: Education[];
   profileImage?: string;
   highlights: string[];
 }

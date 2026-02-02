@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { Project, Skill, Experience, Blog, ContactMessage, AboutContent, SiteSettings, Testimonial } from '@/types/portfolio';
+import { Project, Skill, Experience, Blog, ContactMessage, AboutContent, SiteSettings, Testimonial, Education } from '@/types/portfolio';
 
 interface PortfolioContextType {
   // Projects
@@ -43,7 +43,14 @@ interface PortfolioContextType {
 const defaultAboutContent: AboutContent = {
   bio: "I'm a passionate Full Stack Developer with expertise in building modern web applications. I love creating elegant solutions to complex problems and am constantly learning new technologies.",
   careerSummary: "5+ years of experience in software development, specializing in React, Node.js, and cloud technologies. I've worked with startups and enterprises alike, delivering scalable and maintainable solutions.",
-  education: "Bachelor's Degree in Computer Science",
+  education: [
+    {
+      id: '1',
+      degree: "Bachelor's Degree in Computer Science",
+      institution: "University",
+      year: "2020"
+    }
+  ],
   highlights: [
     "Full Stack Development",
     "Cloud Architecture",
