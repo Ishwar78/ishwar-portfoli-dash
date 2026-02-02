@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Save } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminSettingsPage() {
@@ -34,6 +34,40 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="grid gap-6 max-w-2xl">
+          {/* Hero Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Hero Section</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label>Hero Image</Label>
+                <p className="text-xs text-muted-foreground mb-2">This image appears on your home page hero section</p>
+                <ImageUpload
+                  value={formData.heroImage || ''}
+                  onChange={(url) =>
+                    setFormData((prev) => ({ ...prev, heroImage: url }))
+                  }
+                  placeholder="Upload your hero image"
+                  aspectRatio="square"
+                />
+              </div>
+              <div>
+                <Label htmlFor="experienceYears">Experience Badge Text</Label>
+                <Input
+                  id="experienceYears"
+                  value={formData.experienceYears || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, experienceYears: e.target.value }))
+                  }
+                  placeholder="e.g., 5+ YRS or leave empty to hide"
+                  className="mt-1"
+                />
+                <p className="text-xs text-muted-foreground mt-1">Leave empty to hide the badge</p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Personal Info */}
           <Card>
             <CardHeader>

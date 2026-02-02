@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { TypewriterText } from './TypewriterText';
-import ishwarProfile from '@/assets/ishwar-profile.jpeg';
+import ishwarProfileDefault from '@/assets/ishwar-profile.jpeg';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -27,6 +27,10 @@ const itemVariants = {
 
 export function HeroSection() {
   const { siteSettings } = usePortfolio();
+
+  // Use custom hero image if set, otherwise use default
+  const heroImage = siteSettings.heroImage || ishwarProfileDefault;
+  const experienceYears = siteSettings.experienceYears || '5+ YRS';
 
   const handleDownloadResume = () => {
     const resumeUrl = '/resume.pdf';
@@ -62,13 +66,15 @@ export function HeroSection() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/50 to-accent/50 rounded-2xl blur-2xl opacity-50 animate-pulse" />
               <img
-                src={ishwarProfile}
+                src={heroImage}
                 alt={siteSettings.name}
                 className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover rounded-2xl border-2 border-primary/20 shadow-2xl"
               />
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg">
-                5+ YRS
-              </div>
+              {experienceYears && (
+                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg">
+                  {experienceYears}
+                </div>
+              )}
             </div>
           </motion.div>
 
