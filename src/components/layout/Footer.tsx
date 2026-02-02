@@ -80,6 +80,11 @@ export function Footer() {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link to="/Ishwar/login" className="text-muted-foreground hover:text-foreground transition-colors text-xs opacity-50">
+                  Admin
+                </Link>
+              </li>
             </ul>
           </div>
 
