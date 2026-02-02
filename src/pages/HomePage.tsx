@@ -6,6 +6,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { TypewriterText } from '@/components/home/TypewriterText';
 import { TestimonialsSection } from '@/components/home/TestimonialsSection';
+import { BlogCarousel } from '@/components/home/BlogCarousel';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -301,6 +302,9 @@ export default function HomePage() {
 
       {/* Testimonials Section */}
       <TestimonialsSection />
+
+      {/* Blog Carousel Section */}
+      <BlogCarousel />
 
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
