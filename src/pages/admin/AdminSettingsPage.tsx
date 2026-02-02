@@ -5,6 +5,7 @@ import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { FileUpload } from '@/components/admin/FileUpload';
@@ -127,6 +128,22 @@ export default function AdminSettingsPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+              <div>
+                <Label htmlFor="heroDescription">Hero Description</Label>
+                <Textarea
+                  id="heroDescription"
+                  value={formData.heroDescription || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, heroDescription: e.target.value }))
+                  }
+                  placeholder="I craft elegant, scalable web applications using modern technologies like React, Node.js, and cloud platforms."
+                  className="mt-1 min-h-[100px]"
+                  maxLength={500}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  This text appears below your tagline on the home page ({formData.heroDescription?.length || 0}/500)
+                </p>
               </div>
             </CardContent>
           </Card>

@@ -78,6 +78,7 @@ export interface SiteSettings {
   name: string;
   role: string;
   tagline: string;
+  heroDescription?: string;
   email: string;
   github?: string;
   linkedin?: string;
