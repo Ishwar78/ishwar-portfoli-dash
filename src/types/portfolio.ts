@@ -77,6 +77,8 @@ export interface SiteSettings {
   github?: string;
   linkedin?: string;
   twitter?: string;
+  heroImage?: string;
+  experienceYears?: string;
 }
 
 export interface Testimonial {
