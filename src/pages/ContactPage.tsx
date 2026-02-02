@@ -153,14 +153,51 @@ export default function ContactPage() {
     setIsSubmitting(false);
   };
 
+  // Animation variants for staggered children
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.35,
+        ease: [0.25, 0.46, 0.45, 0.94] as const,
+      },
+    },
+  };
+
+  const formContainerVariants = {
+    hidden: { opacity: 0, scale: 0.97 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: [0.25, 0.46, 0.45, 0.94] as const,
+      },
+    },
+  };
+
   return (
     <MainLayout>
       <div className="py-20">
         <div className="container mx-auto px-4">
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Get In Touch</h1>
@@ -173,88 +210,96 @@ export default function ContactPage() {
             <div className="grid md:grid-cols-2 gap-12">
               {/* Contact Info */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-50px' }}
+                variants={containerVariants}
               >
-                <h2 className="text-2xl font-bold mb-6">Let's Connect</h2>
-                <p className="text-muted-foreground mb-8">
+                <motion.h2 variants={cardVariants} className="text-2xl font-bold mb-6">
+                  Let's Connect
+                </motion.h2>
+                <motion.p variants={cardVariants} className="text-muted-foreground mb-8">
                   Whether you have a question, a project idea, or just want to say hello,
                   feel free to reach out. I'm always open to discussing new opportunities.
-                </p>
+                </motion.p>
 
                 <div className="space-y-4">
-                  <a
+                  <motion.a
+                    variants={cardVariants}
                     href={`mailto:${siteSettings.email}`}
-                    className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary transition-colors"
+                    className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border transition-all duration-300 ease-out hover:border-primary/50 hover:shadow-md hover:shadow-primary/5"
                   >
-                    <div className="p-2 rounded-lg gradient-bg text-primary-foreground">
+                    <div className="p-2 rounded-lg gradient-bg text-primary-foreground transition-transform duration-200 ease-out group-hover:scale-105">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="font-medium">Email</p>
                       <p className="text-sm text-muted-foreground">{siteSettings.email}</p>
                     </div>
-                  </a>
+                  </motion.a>
 
                   {siteSettings.github && (
-                    <a
+                    <motion.a
+                      variants={cardVariants}
                       href={siteSettings.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary transition-colors"
+                      className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border transition-all duration-300 ease-out hover:border-primary/50 hover:shadow-md hover:shadow-primary/5 group"
                     >
-                      <div className="p-2 rounded-lg bg-accent">
+                      <div className="p-2 rounded-lg bg-accent transition-transform duration-200 ease-out group-hover:scale-105">
                         <Github className="h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-medium">GitHub</p>
                         <p className="text-sm text-muted-foreground">View my repositories</p>
                       </div>
-                    </a>
+                    </motion.a>
                   )}
 
                   {siteSettings.linkedin && (
-                    <a
+                    <motion.a
+                      variants={cardVariants}
                       href={siteSettings.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary transition-colors"
+                      className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border transition-all duration-300 ease-out hover:border-primary/50 hover:shadow-md hover:shadow-primary/5 group"
                     >
-                      <div className="p-2 rounded-lg bg-accent">
+                      <div className="p-2 rounded-lg bg-accent transition-transform duration-200 ease-out group-hover:scale-105">
                         <Linkedin className="h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-medium">LinkedIn</p>
                         <p className="text-sm text-muted-foreground">Connect with me</p>
                       </div>
-                    </a>
+                    </motion.a>
                   )}
 
                   {siteSettings.twitter && (
-                    <a
+                    <motion.a
+                      variants={cardVariants}
                       href={siteSettings.twitter}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border hover:border-primary transition-colors"
+                      className="flex items-center gap-4 p-4 bg-card rounded-lg border border-border transition-all duration-300 ease-out hover:border-primary/50 hover:shadow-md hover:shadow-primary/5 group"
                     >
-                      <div className="p-2 rounded-lg bg-accent">
+                      <div className="p-2 rounded-lg bg-accent transition-transform duration-200 ease-out group-hover:scale-105">
                         <Twitter className="h-5 w-5" />
                       </div>
                       <div>
                         <p className="font-medium">Twitter</p>
                         <p className="text-sm text-muted-foreground">Follow me</p>
                       </div>
-                    </a>
+                    </motion.a>
                   )}
                 </div>
               </motion.div>
 
               {/* Contact Form */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-50px' }}
+                variants={formContainerVariants}
               >
                 <div className="bg-card rounded-lg border border-border p-6 md:p-8">
                   <h2 className="text-2xl font-bold mb-6">Send a Message</h2>
@@ -267,7 +312,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={(e) => handleChange('name', e.target.value)}
                         onBlur={() => handleBlur('name')}
-                        className={`mt-1 ${errors.name ? 'border-destructive' : ''}`}
+                        className={`mt-1 transition-all duration-200 ease-out focus:shadow-sm focus:shadow-primary/10 ${errors.name ? 'border-destructive' : ''}`}
                         maxLength={100}
                       />
                       {errors.name && (
@@ -286,7 +331,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={(e) => handleChange('email', e.target.value)}
                         onBlur={() => handleBlur('email')}
-                        className={`mt-1 ${errors.email ? 'border-destructive' : ''}`}
+                        className={`mt-1 transition-all duration-200 ease-out focus:shadow-sm focus:shadow-primary/10 ${errors.email ? 'border-destructive' : ''}`}
                         maxLength={255}
                       />
                       {errors.email && (
@@ -305,7 +350,7 @@ export default function ContactPage() {
                         value={formData.phone}
                         onChange={(e) => handleChange('phone', e.target.value)}
                         onBlur={() => handleBlur('phone')}
-                        className={`mt-1 ${errors.phone ? 'border-destructive' : ''}`}
+                        className={`mt-1 transition-all duration-200 ease-out focus:shadow-sm focus:shadow-primary/10 ${errors.phone ? 'border-destructive' : ''}`}
                         maxLength={20}
                       />
                       {errors.phone && (
@@ -321,7 +366,7 @@ export default function ContactPage() {
                         value={formData.reason}
                         onValueChange={(value) => handleChange('reason', value)}
                       >
-                        <SelectTrigger className={`mt-1 ${errors.reason ? 'border-destructive' : ''}`}>
+                        <SelectTrigger className={`mt-1 transition-all duration-200 ease-out focus:shadow-sm focus:shadow-primary/10 ${errors.reason ? 'border-destructive' : ''}`}>
                           <SelectValue placeholder="Select a reason" />
                         </SelectTrigger>
                         <SelectContent className="bg-popover">
@@ -347,7 +392,7 @@ export default function ContactPage() {
                         value={formData.company}
                         onChange={(e) => handleChange('company', e.target.value)}
                         onBlur={() => handleBlur('company')}
-                        className={`mt-1 ${errors.company ? 'border-destructive' : ''}`}
+                        className={`mt-1 transition-all duration-200 ease-out focus:shadow-sm focus:shadow-primary/10 ${errors.company ? 'border-destructive' : ''}`}
                         maxLength={100}
                       />
                       {errors.company && (
@@ -371,7 +416,7 @@ export default function ContactPage() {
                         onChange={(e) => handleChange('message', e.target.value)}
                         onBlur={() => handleBlur('message')}
                         rows={5}
-                        className={`mt-1 ${errors.message ? 'border-destructive' : ''}`}
+                        className={`mt-1 transition-all duration-200 ease-out focus:shadow-sm focus:shadow-primary/10 ${errors.message ? 'border-destructive' : ''}`}
                         maxLength={1000}
                       />
                       {errors.message && (
@@ -383,7 +428,7 @@ export default function ContactPage() {
                     </div>
                     <Button
                       type="submit"
-                      className="w-full gradient-bg text-primary-foreground"
+                      className="w-full gradient-bg text-primary-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/20 active:translate-y-0 active:shadow-md"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
