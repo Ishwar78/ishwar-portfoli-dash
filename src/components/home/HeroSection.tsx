@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Download, Github, Linkedin, Mail, ChevronDown } from 'lucide-react';
+import { ArrowRight, Download, Github, Linkedin, Twitter, Mail, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { usePortfolio } from '@/contexts/PortfolioContext';
@@ -169,6 +169,16 @@ export function HeroSection() {
                   className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
                 >
                   <Linkedin className="h-5 w-5" />
+                </a>
+              )}
+              {siteSettings.twitter && (
+                <a
+                  href={siteSettings.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
+                >
+                  <Twitter className="h-5 w-5" />
                 </a>
               )}
               <a

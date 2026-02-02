@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Plus, X } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
@@ -19,6 +19,16 @@ export default function AdminSettingsPage() {
       ? siteSettings.typingRoles 
       : ['Full Stack Developer', 'React Developer', 'Node.js Engineer']
   );
+
+  // Sync formData when siteSettings changes (e.g., from localStorage)
+  useEffect(() => {
+    setFormData(siteSettings);
+    setTypingRoles(
+      siteSettings.typingRoles?.length 
+        ? siteSettings.typingRoles 
+        : ['Full Stack Developer', 'React Developer', 'Node.js Engineer']
+    );
+  }, [siteSettings]);
 
   const addTypingRole = () => {
     setTypingRoles([...typingRoles, '']);
