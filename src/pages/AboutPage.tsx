@@ -6,6 +6,11 @@ import { usePortfolio } from '@/contexts/PortfolioContext';
 export default function AboutPage() {
   const { aboutContent, siteSettings } = usePortfolio();
 
+  // Handle legacy string format for education
+  const educationList = Array.isArray(aboutContent.education) 
+    ? aboutContent.education 
+    : [{ id: '1', degree: String(aboutContent.education || ''), institution: '', year: '' }];
+
   return (
     <MainLayout>
       <div className="py-20">
@@ -83,8 +88,19 @@ export default function AboutPage() {
                 </div>
                 <h2 className="text-2xl font-bold">Education</h2>
               </div>
-              <div className="bg-card rounded-lg border border-border p-6">
-                <p className="text-muted-foreground">{aboutContent.education}</p>
+              <div className="space-y-4">
+                {educationList.filter(edu => edu.degree).map((edu) => (
+                  <div key={edu.id} className="bg-card rounded-lg border border-border p-6">
+                    <h3 className="font-semibold text-lg mb-1">{edu.degree}</h3>
+                    {(edu.institution || edu.year) && (
+                      <p className="text-muted-foreground text-sm">
+                        {edu.institution}
+                        {edu.institution && edu.year && ' • '}
+                        {edu.year}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
             </motion.div>
 
