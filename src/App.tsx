@@ -3,24 +3,72 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { PortfolioProvider } from "@/contexts/PortfolioContext";
+
+// Public Pages
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import SkillsPage from "./pages/SkillsPage";
+import ExperiencePage from "./pages/ExperiencePage";
+import ProjectsPage from "./pages/ProjectsPage";
+import ProjectDetailPage from "./pages/ProjectDetailPage";
+import BlogPage from "./pages/BlogPage";
+import BlogDetailPage from "./pages/BlogDetailPage";
+import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
+
+// Admin Pages
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
+import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
+import AdminProjectsPage from "./pages/admin/AdminProjectsPage";
+import AdminAboutPage from "./pages/admin/AdminAboutPage";
+import AdminSkillsPage from "./pages/admin/AdminSkillsPage";
+import AdminExperiencePage from "./pages/admin/AdminExperiencePage";
+import AdminBlogsPage from "./pages/admin/AdminBlogsPage";
+import AdminMessagesPage from "./pages/admin/AdminMessagesPage";
+import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <ThemeProvider>
+      <PortfolioProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/skills" element={<SkillsPage />} />
+              <Route path="/experience" element={<ExperiencePage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/projects/:id" element={<ProjectDetailPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogDetailPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+
+              {/* Admin Routes */}
+              <Route path="/Ishwar/login" element={<AdminLoginPage />} />
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin/projects" element={<AdminProjectsPage />} />
+              <Route path="/admin/about" element={<AdminAboutPage />} />
+              <Route path="/admin/skills" element={<AdminSkillsPage />} />
+              <Route path="/admin/experience" element={<AdminExperiencePage />} />
+              <Route path="/admin/blogs" element={<AdminBlogsPage />} />
+              <Route path="/admin/messages" element={<AdminMessagesPage />} />
+              <Route path="/admin/settings" element={<AdminSettingsPage />} />
+
+              {/* Catch-all */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </PortfolioProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
