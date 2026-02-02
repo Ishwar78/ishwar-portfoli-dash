@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Testimonial } from '@/types/portfolio';
 
@@ -129,6 +130,19 @@ export default function AdminTestimonialsPage() {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Avatar Upload */}
+                <div>
+                  <Label className="mb-2 block">Client Avatar</Label>
+                  <ImageUpload
+                    value={formData.avatar}
+                    onChange={(url) =>
+                      setFormData((prev) => ({ ...prev, avatar: url }))
+                    }
+                    placeholder="Upload client photo"
+                    aspectRatio="square"
+                  />
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">Name *</Label>
@@ -190,17 +204,6 @@ export default function AdminTestimonialsPage() {
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="avatar">Avatar URL (optional)</Label>
-                  <Input
-                    id="avatar"
-                    value={formData.avatar}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, avatar: e.target.value }))
-                    }
-                    placeholder="https://example.com/avatar.jpg"
-                  />
-                </div>
-                <div>
                   <Label htmlFor="content">Testimonial Content *</Label>
                   <Textarea
                     id="content"
@@ -250,12 +253,20 @@ export default function AdminTestimonialsPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
-                        {testimonial.name
-                          .split(' ')
-                          .map((n) => n[0])
-                          .join('')}
-                      </div>
+                      {testimonial.avatar ? (
+                        <img
+                          src={testimonial.avatar}
+                          alt={testimonial.name}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                          {testimonial.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')}
+                        </div>
+                      )}
                       <div>
                         <CardTitle className="text-base">{testimonial.name}</CardTitle>
                         <p className="text-xs text-muted-foreground">

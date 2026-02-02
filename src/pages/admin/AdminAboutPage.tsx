@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Save, Upload } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminAboutPage() {
@@ -51,36 +51,14 @@ export default function AdminAboutPage() {
               <CardTitle className="text-lg">Profile Image</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-6">
-                {formData.profileImage ? (
-                  <img
-                    src={formData.profileImage}
-                    alt="Profile"
-                    className="w-24 h-24 rounded-lg object-cover border border-border"
-                  />
-                ) : (
-                  <div className="w-24 h-24 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                    <span className="text-3xl font-bold text-white">
-                      {siteSettings.name.charAt(0)}
-                    </span>
-                  </div>
-                )}
-                <div className="flex-1">
-                  <Label htmlFor="profileImage">Image URL</Label>
-                  <Input
-                    id="profileImage"
-                    value={formData.profileImage || ''}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, profileImage: e.target.value }))
-                    }
-                    placeholder="https://example.com/your-photo.jpg"
-                    className="mt-1"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Enter a URL for your profile image
-                  </p>
-                </div>
-              </div>
+              <ImageUpload
+                value={formData.profileImage || ''}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, profileImage: url }))
+                }
+                placeholder="Upload your profile photo"
+                aspectRatio="square"
+              />
             </CardContent>
           </Card>
 

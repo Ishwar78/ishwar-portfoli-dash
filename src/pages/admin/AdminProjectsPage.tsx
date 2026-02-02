@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   AlertDialog,
@@ -27,7 +26,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MultiImageUpload } from '@/components/admin/MultiImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Project } from '@/types/portfolio';
 
@@ -50,7 +50,7 @@ export default function AdminProjectsPage() {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [formData, setFormData] = useState(emptyProject);
   const [techStackInput, setTechStackInput] = useState('');
-  const [imagesInput, setImagesInput] = useState('');
+  const [projectImages, setProjectImages] = useState<string[]>([]);
   const [readmeTab, setReadmeTab] = useState<'edit' | 'preview'>('edit');
 
   const handleOpenDialog = (project?: Project) => {
@@ -68,12 +68,12 @@ export default function AdminProjectsPage() {
         featured: project.featured,
       });
       setTechStackInput(project.techStack.join(', '));
-      setImagesInput(project.images.join('\n'));
+      setProjectImages(project.images);
     } else {
       setEditingProject(null);
       setFormData(emptyProject);
       setTechStackInput('');
-      setImagesInput('');
+      setProjectImages([]);
     }
     setIsDialogOpen(true);
   };
@@ -82,10 +82,6 @@ export default function AdminProjectsPage() {
     const techStack = techStackInput
       .split(',')
       .map((t) => t.trim())
-      .filter(Boolean);
-    const images = imagesInput
-      .split('\n')
-      .map((i) => i.trim())
       .filter(Boolean);
 
     if (editingProject) {
@@ -96,7 +92,7 @@ export default function AdminProjectsPage() {
                 ...p,
                 ...formData,
                 techStack,
-                images,
+                images: projectImages,
                 updatedAt: new Date().toISOString(),
               }
             : p
@@ -108,7 +104,7 @@ export default function AdminProjectsPage() {
         ...formData,
         id: Date.now().toString(),
         techStack,
-        images,
+        images: projectImages,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -119,6 +115,7 @@ export default function AdminProjectsPage() {
     setIsDialogOpen(false);
     setEditingProject(null);
     setFormData(emptyProject);
+    setProjectImages([]);
   };
 
   const handleDelete = (id: string) => {
@@ -328,43 +325,14 @@ export default function AdminProjectsPage() {
                 />
               </div>
 
+              {/* Project Images */}
               <div>
-                <Label htmlFor="images">Image URLs (one per line)</Label>
-                <Textarea
-                  id="images"
-                  value={imagesInput}
-                  onChange={(e) => setImagesInput(e.target.value)}
-                  placeholder="https://images.unsplash.com/photo-xxx&#10;https://imgur.com/xxx.jpg"
-                  rows={3}
-                  className="mt-1"
+                <Label className="mb-2 block">Project Images</Label>
+                <MultiImageUpload
+                  value={projectImages}
+                  onChange={setProjectImages}
+                  maxImages={10}
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Use Unsplash, Imgur, or any image hosting service
-                </p>
-                {/* Image Previews */}
-                {imagesInput.trim() && (
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {imagesInput
-                      .split('\n')
-                      .map((url) => url.trim())
-                      .filter(Boolean)
-                      .map((url, idx) => (
-                        <div
-                          key={idx}
-                          className="relative w-20 h-14 rounded border border-border overflow-hidden bg-muted"
-                        >
-                          <img
-                            src={url}
-                            alt={`Preview ${idx + 1}`}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
-                        </div>
-                      ))}
-                  </div>
-                )}
               </div>
 
               {/* README Editor */}

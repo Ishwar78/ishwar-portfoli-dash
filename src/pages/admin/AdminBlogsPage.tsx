@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Blog } from '@/types/portfolio';
 
@@ -272,29 +273,28 @@ export default function AdminBlogsPage() {
                 />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="featuredImage">Featured Image URL</Label>
-                  <Input
-                    id="featuredImage"
-                    value={formData.featuredImage}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, featuredImage: e.target.value }))
-                    }
-                    placeholder="https://example.com/image.jpg"
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="tags">Tags (comma-separated)</Label>
-                  <Input
-                    id="tags"
-                    value={tagsInput}
-                    onChange={(e) => setTagsInput(e.target.value)}
-                    placeholder="React, Tutorial, Web Dev"
-                    className="mt-1"
-                  />
-                </div>
+              {/* Featured Image Upload */}
+              <div>
+                <Label className="mb-2 block">Featured Image</Label>
+                <ImageUpload
+                  value={formData.featuredImage}
+                  onChange={(url) =>
+                    setFormData((prev) => ({ ...prev, featuredImage: url }))
+                  }
+                  placeholder="Upload featured image"
+                  aspectRatio="video"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="tags">Tags (comma-separated)</Label>
+                <Input
+                  id="tags"
+                  value={tagsInput}
+                  onChange={(e) => setTagsInput(e.target.value)}
+                  placeholder="React, Tutorial, Web Dev"
+                  className="mt-1"
+                />
               </div>
 
               <div className="flex items-center gap-2">
