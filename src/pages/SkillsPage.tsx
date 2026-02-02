@@ -3,7 +3,6 @@ import { Code2, Server, Database, Wrench } from 'lucide-react';
 import { useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
-import { Progress } from '@/components/ui/progress';
 
 const categoryIcons = {
   frontend: Code2,
@@ -30,19 +29,19 @@ interface SkillCardProps {
 
 function SkillCard({ skill, index }: SkillCardProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const isInView = useInView(ref, { once: true, margin: '-30px' });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -30, scale: 0.95 }}
-      animate={isInView ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: -30, scale: 0.95 }}
+      initial={{ opacity: 0, y: 15, scale: 0.97 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 15, scale: 0.97 }}
       transition={{ 
-        delay: index * 0.08,
-        duration: 0.5,
+        delay: index * 0.06,
+        duration: 0.35,
         ease: [0.25, 0.46, 0.45, 0.94]
       }}
-      className="bg-card rounded-lg border border-border p-4 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+      className="bg-card rounded-lg border border-border p-4 hover:border-primary/30 hover:shadow-md hover:shadow-primary/5 transition-all duration-300"
     >
       <div className="flex justify-between items-center mb-2">
         <span className="font-medium">{skill.name}</span>
@@ -50,7 +49,7 @@ function SkillCard({ skill, index }: SkillCardProps) {
           className="text-sm text-muted-foreground"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: index * 0.08 + 0.3 }}
+          transition={{ delay: index * 0.06 + 0.2, duration: 0.3 }}
         >
           {skill.level}%
         </motion.span>
@@ -61,8 +60,8 @@ function SkillCard({ skill, index }: SkillCardProps) {
           initial={{ width: 0 }}
           animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
           transition={{ 
-            delay: index * 0.08 + 0.2,
-            duration: 0.8,
+            delay: index * 0.06 + 0.15,
+            duration: 0.6,
             ease: [0.25, 0.46, 0.45, 0.94]
           }}
         />
@@ -79,30 +78,30 @@ interface CategorySectionProps {
 
 function CategorySection({ category, skills, categoryIndex }: CategorySectionProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
   const Icon = categoryIcons[category];
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
       transition={{ 
-        delay: categoryIndex * 0.15,
-        duration: 0.6,
+        delay: categoryIndex * 0.1,
+        duration: 0.4,
         ease: [0.25, 0.46, 0.45, 0.94]
       }}
     >
       <motion.div 
         className="flex items-center gap-3 mb-6"
-        initial={{ opacity: 0, x: -20 }}
-        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-        transition={{ delay: categoryIndex * 0.15 + 0.1 }}
+        initial={{ opacity: 0, x: -10 }}
+        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+        transition={{ delay: categoryIndex * 0.1 + 0.05, duration: 0.35 }}
       >
         <motion.div 
           className="p-2 rounded-lg gradient-bg text-primary-foreground"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          transition={{ type: 'spring', stiffness: 400 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.2 }}
         >
           <Icon className="h-5 w-5" />
         </motion.div>
@@ -137,15 +136,16 @@ export default function SkillsPage() {
         <div className="container mx-auto px-4">
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-center mb-16"
           >
             <motion.span 
               className="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={{ delay: 0.1, duration: 0.35 }}
             >
               Expertise
             </motion.span>
