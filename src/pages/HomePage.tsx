@@ -160,16 +160,22 @@ export default function HomePage() {
             className="max-w-3xl mx-auto text-center"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              Let's Build Something{' '}
-              <span className="gradient-text">Amazing</span>
+              {siteSettings.ctaHeading ? (
+                siteSettings.ctaHeading
+              ) : (
+                <>
+                  Let's Build Something{' '}
+                  <span className="gradient-text">Amazing</span>
+                </>
+              )}
             </h2>
             <p className="text-muted-foreground text-lg mb-10">
-              Have a project in mind or want to collaborate? I'd love to hear from you.
+              {siteSettings.ctaDescription || "Have a project in mind or want to collaborate? I'd love to hear from you."}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link to="/contact">
                 <Button size="lg" className="gradient-bg text-primary-foreground hover:opacity-90 glow h-12 px-8">
-                  Get In Touch
+                  {siteSettings.ctaButtonText || 'Get In Touch'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -179,7 +185,7 @@ export default function HomePage() {
                 onClick={handleDownloadResume}
                 className="h-12 px-8 border-primary/30 hover:bg-primary/10"
               >
-                Download Resume
+                {siteSettings.ctaResumeButtonText || 'Download Resume'}
                 <Download className="ml-2 h-4 w-4" />
               </Button>
             </div>
