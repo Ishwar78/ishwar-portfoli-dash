@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { PortfolioProvider } from "@/contexts/PortfolioContext";
+import { GradientProvider } from "@/components/GradientProvider";
 
 // Public Pages
 import HomePage from "./pages/HomePage";
@@ -37,9 +38,10 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <PortfolioProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
+        <GradientProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
           <BrowserRouter>
             <Routes>
               {/* Public Routes */}
@@ -71,7 +73,8 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </PortfolioProvider>
+      </GradientProvider>
+    </PortfolioProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

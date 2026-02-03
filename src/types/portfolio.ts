@@ -95,6 +95,15 @@ export interface SiteSettings {
   ctaDescription?: string;
   ctaButtonText?: string;
   ctaResumeButtonText?: string;
+  // Section headings
+  featuredProjectsLabel?: string;
+  featuredProjectsHeading?: string;
+  featuredProjectsDescription?: string;
+  skillsLabel?: string;
+  skillsHeading?: string;
+  skillsDescription?: string;
+  // Gradient customization
+  gradientPreset?: 'blue-cyan' | 'purple-pink' | 'green-teal' | 'orange-red' | 'indigo-violet';
 }
 
 export interface Testimonial {
