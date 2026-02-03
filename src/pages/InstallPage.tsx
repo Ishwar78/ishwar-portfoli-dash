@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Smartphone, Monitor, CheckCircle, Share, Plus } from 'lucide-react';
+import { Download, Smartphone, Monitor, CheckCircle, Share, Plus, ArrowUp, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -14,18 +14,26 @@ export default function InstallPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isIOSSafari, setIsIOSSafari] = useState(false);
 
   useEffect(() => {
-    // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    // Check if already installed (standalone mode)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                         (window.navigator as any).standalone === true;
+    if (isStandalone) {
       setIsInstalled(true);
     }
 
     // Check if iOS
     const userAgent = window.navigator.userAgent.toLowerCase();
-    setIsIOS(/iphone|ipad|ipod/.test(userAgent));
+    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
+    setIsIOS(isIOSDevice);
 
-    // Listen for install prompt
+    // Check if Safari on iOS (not Chrome, Firefox, etc.)
+    const isSafari = /safari/.test(userAgent) && !/chrome|crios|fxios|edgios/.test(userAgent);
+    setIsIOSSafari(isIOSDevice && isSafari);
+
+    // Listen for install prompt (Android/Chrome)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -139,31 +147,82 @@ export default function InstallPage() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <Card className="h-full">
+                <Card className={`h-full ${isIOS ? 'border-primary border-2' : ''}`}>
                   <CardHeader>
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                       <Smartphone className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle>iPhone & iPad</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      iPhone & iPad
+                      {isIOS && <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded-full">Your Device</span>}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                    {isIOS && !isIOSSafari && (
+                      <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg mb-4">
+                        <p className="text-sm text-destructive font-medium flex items-center gap-2">
+                          <ExternalLink className="h-4 w-4" />
+                          Safari में खोलें!
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          iOS पर PWA install करने के लिए Safari browser जरूरी है। कृपया इस पेज को Safari में खोलें।
+                        </p>
+                      </div>
+                    )}
+                    
                     <p className="text-muted-foreground">
-                      Follow these steps to install on iOS:
+                      iOS पर install करने के steps:
                     </p>
-                    <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                      <li className="flex items-start gap-2">
-                        <span>1.</span>
-                        <span>Tap the Share button <Share className="inline h-4 w-4" /></span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span>2.</span>
-                        <span>Scroll down and tap "Add to Home Screen" <Plus className="inline h-4 w-4" /></span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span>3.</span>
-                        <span>Tap "Add" in the top right corner</span>
-                      </li>
-                    </ol>
+                    
+                    <div className="space-y-4">
+                      {/* Step 1 */}
+                      <div className="flex items-start gap-3 p-3 bg-accent/50 rounded-lg">
+                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shrink-0">
+                          1
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">Share बटन टैप करें</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Safari के नीचे (या ऊपर) में <Share className="inline h-3 w-3 mx-1" /> आइकन पर टैप करें
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Step 2 */}
+                      <div className="flex items-start gap-3 p-3 bg-accent/50 rounded-lg">
+                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shrink-0">
+                          2
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">"Add to Home Screen" चुनें</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            नीचे स्क्रॉल करें और <Plus className="inline h-3 w-3 mx-1" /> "Add to Home Screen" टैप करें
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Step 3 */}
+                      <div className="flex items-start gap-3 p-3 bg-accent/50 rounded-lg">
+                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shrink-0">
+                          3
+                        </div>
+                        <div>
+                          <p className="font-medium text-sm">"Add" पर टैप करें</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            ऊपर दाएं कोने में "Add" बटन टैप करें
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {isIOS && (
+                      <div className="pt-4 border-t border-border">
+                        <div className="flex items-center gap-2 text-primary animate-bounce">
+                          <ArrowUp className="h-5 w-5" />
+                          <span className="text-sm font-medium">Safari में Share बटन से शुरू करें!</span>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
