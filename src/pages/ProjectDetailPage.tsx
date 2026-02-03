@@ -90,27 +90,6 @@ export default function ProjectDetailPage() {
               </div>
             </motion.div>
 
-            {/* Images */}
-            {project.images.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="mb-12"
-              >
-                <div className="grid gap-4">
-                  {project.images.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`${project.title} screenshot ${index + 1}`}
-                      className="w-full rounded-lg border border-border"
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
             {/* README */}
             {project.readme && (
               <motion.div
