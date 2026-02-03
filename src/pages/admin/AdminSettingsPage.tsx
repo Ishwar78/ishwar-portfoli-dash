@@ -11,6 +11,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { FileUpload } from '@/components/admin/FileUpload';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+const GRADIENT_PRESETS = [
+  { value: 'blue-cyan', label: 'Blue to Cyan (Default)', colors: ['#3B82F6', '#06B6D4'] },
+  { value: 'purple-pink', label: 'Purple to Pink', colors: ['#8B5CF6', '#EC4899'] },
+  { value: 'green-teal', label: 'Green to Teal', colors: ['#22C55E', '#14B8A6'] },
+  { value: 'orange-red', label: 'Orange to Red', colors: ['#F97316', '#EF4444'] },
+  { value: 'indigo-violet', label: 'Indigo to Violet', colors: ['#6366F1', '#8B5CF6'] },
+];
 
 export default function AdminSettingsPage() {
   const { siteSettings, setSiteSettings } = usePortfolio();
@@ -285,6 +300,151 @@ export default function AdminSettingsPage() {
                   placeholder="Download Resume"
                   className="mt-1"
                 />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Featured Projects Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Featured Projects Section</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="featuredProjectsLabel">Label (small text above heading)</Label>
+                <Input
+                  id="featuredProjectsLabel"
+                  value={formData.featuredProjectsLabel || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, featuredProjectsLabel: e.target.value }))
+                  }
+                  placeholder="Portfolio"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="featuredProjectsHeading">Section Heading</Label>
+                <Input
+                  id="featuredProjectsHeading"
+                  value={formData.featuredProjectsHeading || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, featuredProjectsHeading: e.target.value }))
+                  }
+                  placeholder="Featured Projects"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="featuredProjectsDescription">Section Description</Label>
+                <Textarea
+                  id="featuredProjectsDescription"
+                  value={formData.featuredProjectsDescription || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, featuredProjectsDescription: e.target.value }))
+                  }
+                  placeholder="A selection of my recent work and personal projects"
+                  className="mt-1"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Skills Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Skills Section</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="skillsLabel">Label (small text above heading)</Label>
+                <Input
+                  id="skillsLabel"
+                  value={formData.skillsLabel || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, skillsLabel: e.target.value }))
+                  }
+                  placeholder="Expertise"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="skillsHeading">Section Heading</Label>
+                <Input
+                  id="skillsHeading"
+                  value={formData.skillsHeading || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, skillsHeading: e.target.value }))
+                  }
+                  placeholder="Skills & Technologies"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="skillsDescription">Section Description</Label>
+                <Textarea
+                  id="skillsDescription"
+                  value={formData.skillsDescription || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, skillsDescription: e.target.value }))
+                  }
+                  placeholder="Technologies I use to bring ideas to life"
+                  className="mt-1"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Gradient Theme */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Gradient Theme</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="gradientPreset">Color Scheme</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  This affects gradient text, buttons, and accent colors throughout the site
+                </p>
+                <Select
+                  value={formData.gradientPreset || 'blue-cyan'}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, gradientPreset: value as any }))
+                  }
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select a gradient theme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GRADIENT_PRESETS.map((preset) => (
+                      <SelectItem key={preset.value} value={preset.value}>
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="w-4 h-4 rounded-full"
+                            style={{
+                              background: `linear-gradient(135deg, ${preset.colors[0]}, ${preset.colors[1]})`,
+                            }}
+                          />
+                          {preset.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="p-4 rounded-lg border border-border">
+                <p className="text-sm text-muted-foreground mb-2">Preview:</p>
+                <span
+                  className="text-2xl font-bold bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: `linear-gradient(135deg, ${
+                      GRADIENT_PRESETS.find(p => p.value === (formData.gradientPreset || 'blue-cyan'))?.colors[0]
+                    }, ${
+                      GRADIENT_PRESETS.find(p => p.value === (formData.gradientPreset || 'blue-cyan'))?.colors[1]
+                    })`,
+                  }}
+                >
+                  Gradient Text Preview
+                </span>
               </div>
             </CardContent>
           </Card>

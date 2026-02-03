@@ -36,10 +36,14 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block">Portfolio</span>
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">Featured Projects</h2>
+              <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block">
+                {siteSettings.featuredProjectsLabel || 'Portfolio'}
+              </span>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+                {siteSettings.featuredProjectsHeading || 'Featured Projects'}
+              </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                A selection of my recent work and personal projects
+                {siteSettings.featuredProjectsDescription || 'A selection of my recent work and personal projects'}
               </p>
             </motion.div>
 
@@ -109,10 +113,14 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block">Expertise</span>
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">Skills & Technologies</h2>
+            <span className="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block">
+              {siteSettings.skillsLabel || 'Expertise'}
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              {siteSettings.skillsHeading || 'Skills & Technologies'}
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Technologies I use to bring ideas to life
+              {siteSettings.skillsDescription || 'Technologies I use to bring ideas to life'}
             </p>
           </motion.div>
 
