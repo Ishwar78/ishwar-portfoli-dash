@@ -87,6 +87,10 @@ export interface SiteSettings {
   heroImage?: string;
   experienceYears?: string;
   resumeUrl?: string;
+  showAvailabilityBadge?: boolean;
+  viewProjectsText?: string;
+  contactMeText?: string;
+  downloadCvText?: string;
 }
 
 export interface Testimonial {
