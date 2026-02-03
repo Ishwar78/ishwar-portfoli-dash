@@ -133,12 +133,14 @@ export function HeroSection() {
 
           {/* Content */}
           <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
-            <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                Available for opportunities
-              </span>
-            </motion.div>
+            {siteSettings.showAvailabilityBadge !== false && (
+              <motion.div variants={itemVariants} className="mb-6">
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  Available for opportunities
+                </span>
+              </motion.div>
+            )}
 
             <motion.h1
               variants={itemVariants}
@@ -176,7 +178,7 @@ export function HeroSection() {
                   size="lg" 
                   className="gradient-bg text-primary-foreground hover:opacity-90 glow h-12 px-8 transition-all duration-200 hover:-translate-y-0.5"
                 >
-                  View Projects
+                  {siteSettings.viewProjectsText || 'View Projects'}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -186,7 +188,7 @@ export function HeroSection() {
                   variant="outline" 
                   className="h-12 px-8 border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-200 hover:-translate-y-0.5"
                 >
-                  Contact Me
+                  {siteSettings.contactMeText || 'Contact Me'}
                   <Mail className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
@@ -196,7 +198,7 @@ export function HeroSection() {
                 onClick={handleDownloadResume}
                 className="h-12 px-8 hover:bg-primary/10 transition-all duration-200 hover:-translate-y-0.5"
               >
-                Download CV
+                {siteSettings.downloadCvText || 'Download CV'}
                 <Download className="ml-2 h-4 w-4" />
               </Button>
             </motion.div>

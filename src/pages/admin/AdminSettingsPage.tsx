@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { FileUpload } from '@/components/admin/FileUpload';
@@ -145,6 +146,21 @@ export default function AdminSettingsPage() {
                   This text appears below your tagline on the home page ({formData.heroDescription?.length || 0}/500)
                 </p>
               </div>
+              <div className="flex items-center justify-between py-2">
+                <div>
+                  <Label htmlFor="showAvailabilityBadge">Show Availability Badge</Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Display "Available for opportunities" badge in hero section
+                  </p>
+                </div>
+                <Switch
+                  id="showAvailabilityBadge"
+                  checked={formData.showAvailabilityBadge !== false}
+                  onCheckedChange={(checked) =>
+                    setFormData((prev) => ({ ...prev, showAvailabilityBadge: checked }))
+                  }
+                />
+              </div>
             </CardContent>
           </Card>
 
@@ -166,6 +182,51 @@ export default function AdminSettingsPage() {
                   }
                   placeholder="Upload your resume (PDF or Image)"
                   maxSizeMB={10}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Hero Buttons */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Hero Button Labels</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="viewProjectsText">View Projects Button</Label>
+                <Input
+                  id="viewProjectsText"
+                  value={formData.viewProjectsText || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, viewProjectsText: e.target.value }))
+                  }
+                  placeholder="View Projects"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="contactMeText">Contact Me Button</Label>
+                <Input
+                  id="contactMeText"
+                  value={formData.contactMeText || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, contactMeText: e.target.value }))
+                  }
+                  placeholder="Contact Me"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="downloadCvText">Download CV Button</Label>
+                <Input
+                  id="downloadCvText"
+                  value={formData.downloadCvText || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, downloadCvText: e.target.value }))
+                  }
+                  placeholder="Download CV"
+                  className="mt-1"
                 />
               </div>
             </CardContent>
