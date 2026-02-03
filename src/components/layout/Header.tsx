@@ -1,20 +1,20 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X, Sun, Moon, Github, Linkedin, Mail } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { cn } from '@/lib/utils';
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/skills', label: 'Skills' },
-  { href: '/experience', label: 'Experience' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' },
+const defaultNavLinks = [
+  { id: '1', label: 'Home', url: '/', enabled: true, isExternal: false },
+  { id: '2', label: 'About', url: '/about', enabled: true, isExternal: false },
+  { id: '3', label: 'Skills', url: '/skills', enabled: true, isExternal: false },
+  { id: '4', label: 'Experience', url: '/experience', enabled: true, isExternal: false },
+  { id: '5', label: 'Projects', url: '/projects', enabled: true, isExternal: false },
+  { id: '6', label: 'Blog', url: '/blog', enabled: true, isExternal: false },
+  { id: '7', label: 'Contact', url: '/contact', enabled: true, isExternal: false },
 ];
 
 export function Header() {
@@ -22,6 +22,14 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
   const { siteSettings } = usePortfolio();
   const location = useLocation();
+
+  // Use custom nav links if available, otherwise use defaults
+  const navLinks = useMemo(() => {
+    if (siteSettings.headerNavLinks?.length) {
+      return siteSettings.headerNavLinks.filter(link => link.enabled);
+    }
+    return defaultNavLinks;
+  }, [siteSettings.headerNavLinks]);
 
   return (
     <motion.header
@@ -39,20 +47,32 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
-                  location.pathname === link.href
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => 
+              link.isExternal ? (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:text-foreground hover:bg-accent"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.id}
+                  to={link.url}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
+                    location.pathname === link.url
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
           </nav>
 
           {/* Actions */}
@@ -110,21 +130,34 @@ export function Header() {
             className="md:hidden py-4 border-t border-border"
           >
             <div className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={cn(
-                    "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
-                    location.pathname === link.href
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => 
+                link.isExternal ? (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="px-4 py-3 rounded-lg text-sm font-medium transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.id}
+                    to={link.url}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={cn(
+                      "px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                      location.pathname === link.url
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
             </div>
           </motion.nav>
         )}
