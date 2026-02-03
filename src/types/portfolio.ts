@@ -91,6 +91,10 @@ export interface SiteSettings {
   viewProjectsText?: string;
   contactMeText?: string;
   downloadCvText?: string;
+  ctaHeading?: string;
+  ctaDescription?: string;
+  ctaButtonText?: string;
+  ctaResumeButtonText?: string;
 }
 
 export interface Testimonial {

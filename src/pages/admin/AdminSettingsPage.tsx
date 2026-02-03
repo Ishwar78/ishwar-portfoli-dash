@@ -232,6 +232,63 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
+          {/* CTA Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">CTA Section (Bottom of Home Page)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="ctaHeading">CTA Heading</Label>
+                <Input
+                  id="ctaHeading"
+                  value={formData.ctaHeading || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, ctaHeading: e.target.value }))
+                  }
+                  placeholder="Let's Build Something Amazing"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="ctaDescription">CTA Description</Label>
+                <Textarea
+                  id="ctaDescription"
+                  value={formData.ctaDescription || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, ctaDescription: e.target.value }))
+                  }
+                  placeholder="Have a project in mind or want to collaborate? I'd love to hear from you."
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="ctaButtonText">Primary Button Text</Label>
+                <Input
+                  id="ctaButtonText"
+                  value={formData.ctaButtonText || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, ctaButtonText: e.target.value }))
+                  }
+                  placeholder="Get In Touch"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="ctaResumeButtonText">Resume Button Text</Label>
+                <Input
+                  id="ctaResumeButtonText"
+                  value={formData.ctaResumeButtonText || ''}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, ctaResumeButtonText: e.target.value }))
+                  }
+                  placeholder="Download Resume"
+                  className="mt-1"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Personal Info */}
           <Card>
             <CardHeader>
