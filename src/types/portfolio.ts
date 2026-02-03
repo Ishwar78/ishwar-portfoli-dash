@@ -74,6 +74,27 @@ export interface AboutContent {
   highlights: string[];
 }
 
+export interface FooterLink {
+  id: string;
+  label: string;
+  url: string;
+  isExternal?: boolean;
+}
+
+export interface FooterSection {
+  id: string;
+  title: string;
+  links: FooterLink[];
+}
+
+export interface HeaderNavLink {
+  id: string;
+  label: string;
+  url: string;
+  isExternal?: boolean;
+  enabled: boolean;
+}
+
 export interface SiteSettings {
   name: string;
   role: string;
@@ -104,6 +125,10 @@ export interface SiteSettings {
   skillsDescription?: string;
   // Gradient customization
   gradientPreset?: 'blue-cyan' | 'purple-pink' | 'green-teal' | 'orange-red' | 'indigo-violet';
+  // Header/Footer customization
+  headerNavLinks?: HeaderNavLink[];
+  footerSections?: FooterSection[];
+  footerCopyright?: string;
 }
 
 export interface Testimonial {

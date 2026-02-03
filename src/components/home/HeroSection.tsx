@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Download, Github, Linkedin, Twitter, Mail, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { TypewriterText } from './TypewriterText';
@@ -45,6 +46,18 @@ const imageVariants = {
 
 export function HeroSection() {
   const { siteSettings } = usePortfolio();
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Parallax scroll effect
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const imageY = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 50]);
+  const orbsY = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   // Use custom hero image if set, otherwise use default
   const heroImage = siteSettings.heroImage || ishwarProfileDefault;
@@ -63,32 +76,32 @@ export function HeroSection() {
   };
 
   return (
-    <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden">
+    <section ref={sectionRef} className="min-h-[90vh] flex items-center justify-center relative overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0 bg-grid opacity-30" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
       
-      {/* Floating orbs - subtle animation */}
+      {/* Floating orbs - subtle animation with parallax */}
       <motion.div 
         className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-primary/20 blur-3xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.3 }}
-        style={{ animation: 'float 6s ease-in-out infinite' }}
+        style={{ y: orbsY, animation: 'float 6s ease-in-out infinite' }}
       />
       <motion.div 
         className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-primary/10 blur-3xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.5 }}
-        style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '-1.5s' }}
+        style={{ y: orbsY, animation: 'float 6s ease-in-out infinite', animationDelay: '-1.5s' }}
       />
       <motion.div 
         className="absolute top-1/2 right-1/3 w-64 h-64 rounded-full bg-accent/30 blur-3xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 0.7 }}
-        style={{ animation: 'float 6s ease-in-out infinite', animationDelay: '-0.7s' }}
+        style={{ y: orbsY, animation: 'float 6s ease-in-out infinite', animationDelay: '-0.7s' }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -98,10 +111,11 @@ export function HeroSection() {
           animate="visible"
           className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16"
         >
-          {/* Profile Image */}
+          {/* Profile Image with Parallax */}
           <motion.div 
             variants={imageVariants}
             className="flex-shrink-0 order-1 lg:order-2"
+            style={{ y: imageY }}
           >
             <div className="relative">
               <motion.div 
@@ -114,6 +128,7 @@ export function HeroSection() {
                 src={heroImage}
                 alt={siteSettings.name}
                 className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover rounded-2xl border-2 border-primary/20 shadow-2xl"
+                style={{ scale: imageScale }}
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               />
@@ -131,8 +146,8 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* Content */}
-          <div className="flex-1 text-center lg:text-left order-2 lg:order-1">
+          {/* Content with parallax */}
+          <motion.div className="flex-1 text-center lg:text-left order-2 lg:order-1" style={{ y: contentY }}>
             {siteSettings.showAvailabilityBadge !== false && (
               <motion.div variants={itemVariants} className="mb-6">
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium">
@@ -253,7 +268,7 @@ export function HeroSection() {
                 <Mail className="h-5 w-5" />
               </motion.a>
             </motion.div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 

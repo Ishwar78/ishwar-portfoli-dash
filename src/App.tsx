@@ -31,6 +31,7 @@ import AdminTestimonialsPage from "./pages/admin/AdminTestimonialsPage";
 import AdminBlogsPage from "./pages/admin/AdminBlogsPage";
 import AdminMessagesPage from "./pages/admin/AdminMessagesPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
+import AdminNavigationPage from "./pages/admin/AdminNavigationPage";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/admin/blogs" element={<AdminBlogsPage />} />
               <Route path="/admin/messages" element={<AdminMessagesPage />} />
               <Route path="/admin/settings" element={<AdminSettingsPage />} />
+              <Route path="/admin/navigation" element={<AdminNavigationPage />} />
 
               {/* Catch-all */}
               <Route path="*" element={<NotFound />} />
