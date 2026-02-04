@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { ImageUpload } from '@/components/admin/ImageUpload';
+import { LocalImageUpload } from '@/components/admin/LocalImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Blog } from '@/types/portfolio';
 
@@ -276,7 +276,7 @@ export default function AdminBlogsPage() {
               {/* Featured Image Upload */}
               <div>
                 <Label className="mb-2 block">Featured Image</Label>
-                <ImageUpload
+                <LocalImageUpload
                   value={formData.featuredImage}
                   onChange={(url) =>
                     setFormData((prev) => ({ ...prev, featuredImage: url }))

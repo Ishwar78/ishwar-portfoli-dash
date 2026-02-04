@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ImageUpload } from '@/components/admin/ImageUpload';
+import { LocalImageUpload } from '@/components/admin/LocalImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Education } from '@/types/portfolio';
 
@@ -77,7 +77,7 @@ export default function AdminAboutPage() {
               <CardTitle className="text-lg">Profile Image</CardTitle>
             </CardHeader>
             <CardContent>
-              <ImageUpload
+              <LocalImageUpload
                 value={formData.profileImage || ''}
                 onChange={(url) =>
                   setFormData((prev) => ({ ...prev, profileImage: url }))

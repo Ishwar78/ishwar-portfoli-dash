@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ImageUpload } from '@/components/admin/ImageUpload';
+import { LocalImageUpload } from '@/components/admin/LocalImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Testimonial } from '@/types/portfolio';
 
@@ -133,7 +133,7 @@ export default function AdminTestimonialsPage() {
                 {/* Avatar Upload */}
                 <div>
                   <Label className="mb-2 block">Client Avatar</Label>
-                  <ImageUpload
+                  <LocalImageUpload
                     value={formData.avatar}
                     onChange={(url) =>
                       setFormData((prev) => ({ ...prev, avatar: url }))
