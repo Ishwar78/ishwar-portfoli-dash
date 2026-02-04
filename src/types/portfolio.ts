@@ -140,3 +140,12 @@ export interface Testimonial {
   rating: number;
   avatar?: string;
 }
+
+export interface CustomPage {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
