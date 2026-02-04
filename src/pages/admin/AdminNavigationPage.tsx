@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Save, Plus, X, GripVertical, ExternalLink, FileText, Image as ImageIcon } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { HeaderNavLink, FooterSection, FooterLink, CustomPage } from '@/types/portfolio';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ImageUpload } from '@/components/admin/ImageUpload';
+import { LocalImageUpload } from '@/components/admin/LocalImageUpload';
 import {
   Dialog,
   DialogContent,
@@ -71,6 +71,8 @@ export default function AdminNavigationPage() {
   const [pageMetaDescription, setPageMetaDescription] = useState('');
   const [pageFeaturedImage, setPageFeaturedImage] = useState('');
   const [addToFooter, setAddToFooter] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState<number>(0);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setHeaderLinks(siteSettings.headerNavLinks?.length ? siteSettings.headerNavLinks : defaultNavLinks);
@@ -318,8 +320,35 @@ export default function AdminNavigationPage() {
 
   const insertImageToContent = (imageUrl: string) => {
     const markdownImage = `\n![Image](${imageUrl})\n`;
-    setPageContent(prev => prev + markdownImage);
-    toast({ title: 'Image added to content' });
+    
+    // Insert at cursor position
+    const before = pageContent.substring(0, cursorPosition);
+    const after = pageContent.substring(cursorPosition);
+    const newContent = before + markdownImage + after;
+    setPageContent(newContent);
+    
+    // Update cursor position to after the inserted image
+    const newPosition = cursorPosition + markdownImage.length;
+    setCursorPosition(newPosition);
+    
+    // Focus textarea and set cursor position
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        textareaRef.current.setSelectionRange(newPosition, newPosition);
+      }
+    }, 100);
+    
+    toast({ title: 'Image inserted at cursor position' });
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPageContent(e.target.value);
+    setCursorPosition(e.target.selectionStart);
+  };
+
+  const handleTextareaSelect = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    setCursorPosition((e.target as HTMLTextAreaElement).selectionStart);
   };
 
   return (
@@ -608,7 +637,7 @@ export default function AdminNavigationPage() {
               {/* Featured Image */}
               <div className="space-y-2">
                 <Label>Featured Image (Optional)</Label>
-                <ImageUpload
+                <LocalImageUpload
                   value={pageFeaturedImage}
                   onChange={setPageFeaturedImage}
                   placeholder="Upload featured image for this page"
@@ -623,8 +652,11 @@ export default function AdminNavigationPage() {
                   <ContentImageUploader onImageInsert={insertImageToContent} />
                 </div>
                 <Textarea
+                  ref={textareaRef}
                   value={pageContent}
-                  onChange={(e) => setPageContent(e.target.value)}
+                  onChange={handleTextareaChange}
+                  onSelect={handleTextareaSelect}
+                  onClick={handleTextareaSelect}
                   placeholder="# Your Page Title
 
 Write your content here using Markdown...
@@ -727,7 +759,7 @@ function ContentImageUploader({ onImageInsert }: { onImageInsert: (url: string) 
           <DialogDescription>Upload or paste an image URL to insert into content</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
-          <ImageUpload
+          <LocalImageUpload
             value={imageUrl}
             onChange={setImageUrl}
             placeholder="Upload image"
