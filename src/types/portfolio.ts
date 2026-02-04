@@ -146,6 +146,10 @@ export interface CustomPage {
   title: string;
   slug: string;
   content: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  featuredImage?: string;
+  addToFooter?: boolean;
   createdAt: string;
   updatedAt: string;
 }
