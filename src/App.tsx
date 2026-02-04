@@ -18,6 +18,7 @@ import BlogPage from "./pages/BlogPage";
 import BlogDetailPage from "./pages/BlogDetailPage";
 import ContactPage from "./pages/ContactPage";
 import InstallPage from "./pages/InstallPage";
+import CustomPage from "./pages/CustomPage";
 import NotFound from "./pages/NotFound";
 
 // Admin Pages
@@ -56,6 +57,7 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogDetailPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/install" element={<InstallPage />} />
+              <Route path="/page/:slug" element={<CustomPage />} />
 
               {/* Admin Routes */}
               <Route path="/Ishwar/login" element={<AdminLoginPage />} />

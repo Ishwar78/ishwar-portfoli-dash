@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { Project, Skill, Experience, Blog, ContactMessage, AboutContent, SiteSettings, Testimonial, Education } from '@/types/portfolio';
+import { Project, Skill, Experience, Blog, ContactMessage, AboutContent, SiteSettings, Testimonial, Education, CustomPage } from '@/types/portfolio';
 
 interface PortfolioContextType {
   // Projects
@@ -26,6 +26,10 @@ interface PortfolioContextType {
   // Testimonials
   testimonials: Testimonial[];
   setTestimonials: (testimonials: Testimonial[] | ((prev: Testimonial[]) => Testimonial[])) => void;
+  
+  // Custom Pages
+  customPages: CustomPage[];
+  setCustomPages: (pages: CustomPage[] | ((prev: CustomPage[]) => CustomPage[])) => void;
   
   // About Content
   aboutContent: AboutContent;
@@ -192,6 +196,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [blogs, setBlogs] = useLocalStorage<Blog[]>('portfolio-blogs', defaultBlogs);
   const [messages, setMessages] = useLocalStorage<ContactMessage[]>('portfolio-messages', []);
   const [testimonials, setTestimonials] = useLocalStorage<Testimonial[]>('portfolio-testimonials', defaultTestimonials);
+  const [customPages, setCustomPages] = useLocalStorage<CustomPage[]>('portfolio-custom-pages', []);
   const [aboutContent, setAboutContent] = useLocalStorage<AboutContent>('portfolio-about', defaultAboutContent);
   const [siteSettings, setSiteSettings] = useLocalStorage<SiteSettings>('portfolio-settings', defaultSiteSettings);
   const [isAdmin, setIsAdmin] = useLocalStorage<boolean>('portfolio-admin', false);
@@ -211,6 +216,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         setMessages,
         testimonials,
         setTestimonials,
+        customPages,
+        setCustomPages,
         aboutContent,
         setAboutContent,
         siteSettings,
