@@ -8,8 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ImageUpload } from '@/components/admin/ImageUpload';
-import { FileUpload } from '@/components/admin/FileUpload';
+import { LocalImageUpload } from '@/components/admin/LocalImageUpload';
+import { LocalFileUpload } from '@/components/admin/LocalFileUpload';
 import { useToast } from '@/hooks/use-toast';
 import {
   Select,
@@ -91,7 +91,7 @@ export default function AdminSettingsPage() {
               <div>
                 <Label>Hero Image</Label>
                 <p className="text-xs text-muted-foreground mb-2">This image appears on your home page hero section</p>
-                <ImageUpload
+                <LocalImageUpload
                   value={formData.heroImage || ''}
                   onChange={(url) =>
                     setFormData((prev) => ({ ...prev, heroImage: url }))
@@ -190,7 +190,7 @@ export default function AdminSettingsPage() {
                 <p className="text-xs text-muted-foreground mb-2">
                   Upload your resume as PDF or image. This will be used for the "Download CV" button.
                 </p>
-                <FileUpload
+                <LocalFileUpload
                   value={formData.resumeUrl || ''}
                   onChange={(url) =>
                     setFormData((prev) => ({ ...prev, resumeUrl: url }))

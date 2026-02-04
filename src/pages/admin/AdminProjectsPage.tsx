@@ -27,7 +27,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MultiImageUpload } from '@/components/admin/MultiImageUpload';
+import { LocalMultiImageUpload } from '@/components/admin/LocalMultiImageUpload';
 import { useToast } from '@/hooks/use-toast';
 import { Project } from '@/types/portfolio';
 
@@ -328,7 +328,7 @@ export default function AdminProjectsPage() {
               {/* Project Images */}
               <div>
                 <Label className="mb-2 block">Project Images</Label>
-                <MultiImageUpload
+                <LocalMultiImageUpload
                   value={projectImages}
                   onChange={setProjectImages}
                   maxImages={10}
