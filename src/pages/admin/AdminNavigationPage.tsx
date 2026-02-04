@@ -1,23 +1,30 @@
 import { useState, useEffect } from 'react';
-import { Save, Plus, X, GripVertical, ExternalLink, FileText } from 'lucide-react';
+import { Save, Plus, X, GripVertical, ExternalLink, FileText, Image as ImageIcon } from 'lucide-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { HeaderNavLink, FooterSection, FooterLink, CustomPage } from '@/types/portfolio';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const defaultNavLinks: HeaderNavLink[] = [
   { id: '1', label: 'Home', url: '/', enabled: true },
@@ -60,6 +67,10 @@ export default function AdminNavigationPage() {
   const [pageTitle, setPageTitle] = useState('');
   const [pageSlug, setPageSlug] = useState('');
   const [pageContent, setPageContent] = useState('');
+  const [pageMetaTitle, setPageMetaTitle] = useState('');
+  const [pageMetaDescription, setPageMetaDescription] = useState('');
+  const [pageFeaturedImage, setPageFeaturedImage] = useState('');
+  const [addToFooter, setAddToFooter] = useState(false);
 
   useEffect(() => {
     setHeaderLinks(siteSettings.headerNavLinks?.length ? siteSettings.headerNavLinks : defaultNavLinks);
@@ -67,7 +78,6 @@ export default function AdminNavigationPage() {
     setFooterCopyright(siteSettings.footerCopyright || '');
   }, [siteSettings]);
 
-  // Auto-generate slug from title
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
@@ -77,7 +87,6 @@ export default function AdminNavigationPage() {
       .trim();
   };
 
-  // Header link handlers
   const addHeaderLink = () => {
     const newLink: HeaderNavLink = {
       id: Date.now().toString(),
@@ -89,11 +98,19 @@ export default function AdminNavigationPage() {
     setHeaderLinks([...headerLinks, newLink]);
   };
 
-  const addCustomPageLink = () => {
+  const resetDialogState = () => {
     setEditingPage(null);
     setPageTitle('');
     setPageSlug('');
     setPageContent('');
+    setPageMetaTitle('');
+    setPageMetaDescription('');
+    setPageFeaturedImage('');
+    setAddToFooter(false);
+  };
+
+  const addCustomPageLink = () => {
+    resetDialogState();
     setIsCustomPageDialogOpen(true);
   };
 
@@ -107,25 +124,46 @@ export default function AdminNavigationPage() {
     const now = new Date().toISOString();
 
     if (editingPage) {
-      // Update existing page
       setCustomPages(pages => pages.map(p => 
         p.id === editingPage.id 
-          ? { ...p, title: pageTitle, slug, content: pageContent, updatedAt: now }
+          ? { 
+              ...p, 
+              title: pageTitle, 
+              slug, 
+              content: pageContent, 
+              metaTitle: pageMetaTitle || undefined,
+              metaDescription: pageMetaDescription || undefined,
+              featuredImage: pageFeaturedImage || undefined,
+              addToFooter,
+              updatedAt: now 
+            }
           : p
       ));
+      
+      // Update footer if needed
+      if (addToFooter !== editingPage.addToFooter) {
+        if (addToFooter) {
+          addPageToFooter(pageTitle, slug);
+        } else {
+          removePageFromFooter(slug);
+        }
+      }
     } else {
-      // Create new page
       const newPage: CustomPage = {
         id: Date.now().toString(),
         title: pageTitle,
         slug,
         content: pageContent,
+        metaTitle: pageMetaTitle || undefined,
+        metaDescription: pageMetaDescription || undefined,
+        featuredImage: pageFeaturedImage || undefined,
+        addToFooter,
         createdAt: now,
         updatedAt: now,
       };
       setCustomPages([...customPages, newPage]);
 
-      // Add to header links automatically
+      // Add to header links
       const newLink: HeaderNavLink = {
         id: `custom-${newPage.id}`,
         label: pageTitle,
@@ -134,10 +172,52 @@ export default function AdminNavigationPage() {
         isExternal: false,
       };
       setHeaderLinks([...headerLinks, newLink]);
+
+      // Add to footer if checked
+      if (addToFooter) {
+        addPageToFooter(pageTitle, slug);
+      }
     }
 
     setIsCustomPageDialogOpen(false);
     toast({ title: editingPage ? 'Page updated successfully' : 'Custom page created!' });
+  };
+
+  const addPageToFooter = (title: string, slug: string) => {
+    setFooterSections(sections => {
+      const quickLinksIndex = sections.findIndex(s => s.id === 'quick-links');
+      if (quickLinksIndex !== -1) {
+        const updated = [...sections];
+        updated[quickLinksIndex] = {
+          ...updated[quickLinksIndex],
+          links: [
+            ...updated[quickLinksIndex].links,
+            { id: `footer-page-${slug}`, label: title, url: `/page/${slug}` }
+          ]
+        };
+        return updated;
+      } else if (sections.length > 0) {
+        const updated = [...sections];
+        updated[0] = {
+          ...updated[0],
+          links: [
+            ...updated[0].links,
+            { id: `footer-page-${slug}`, label: title, url: `/page/${slug}` }
+          ]
+        };
+        return updated;
+      }
+      return sections;
+    });
+  };
+
+  const removePageFromFooter = (slug: string) => {
+    setFooterSections(sections => 
+      sections.map(section => ({
+        ...section,
+        links: section.links.filter(link => !link.url.includes(`/page/${slug}`))
+      }))
+    );
   };
 
   const editCustomPage = (page: CustomPage) => {
@@ -145,13 +225,20 @@ export default function AdminNavigationPage() {
     setPageTitle(page.title);
     setPageSlug(page.slug);
     setPageContent(page.content);
+    setPageMetaTitle(page.metaTitle || '');
+    setPageMetaDescription(page.metaDescription || '');
+    setPageFeaturedImage(page.featuredImage || '');
+    setAddToFooter(page.addToFooter || false);
     setIsCustomPageDialogOpen(true);
   };
 
   const deleteCustomPage = (pageId: string) => {
+    const page = customPages.find(p => p.id === pageId);
+    if (page) {
+      removePageFromFooter(page.slug);
+    }
     setCustomPages(pages => pages.filter(p => p.id !== pageId));
-    // Also remove from header links
-    setHeaderLinks(links => links.filter(l => !l.url.includes(`/page/`) || !l.id.includes(pageId)));
+    setHeaderLinks(links => links.filter(l => !l.id.includes(pageId)));
     toast({ title: 'Page deleted' });
   };
 
@@ -165,7 +252,6 @@ export default function AdminNavigationPage() {
     setHeaderLinks(links => links.filter(link => link.id !== id));
   };
 
-  // Footer section handlers
   const addFooterSection = () => {
     const newSection: FooterSection = {
       id: Date.now().toString(),
@@ -228,6 +314,12 @@ export default function AdminNavigationPage() {
       footerCopyright: footerCopyright || undefined,
     }));
     toast({ title: 'Navigation settings saved successfully' });
+  };
+
+  const insertImageToContent = (imageUrl: string) => {
+    const markdownImage = `\n![Image](${imageUrl})\n`;
+    setPageContent(prev => prev + markdownImage);
+    toast({ title: 'Image added to content' });
   };
 
   return (
@@ -323,7 +415,6 @@ export default function AdminNavigationPage() {
 
           {/* Footer Sections Tab */}
           <TabsContent value="footer" className="space-y-4 mt-4">
-            {/* Footer Copyright */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Footer Copyright</CardTitle>
@@ -338,7 +429,6 @@ export default function AdminNavigationPage() {
               </CardContent>
             </Card>
 
-            {/* Footer Sections */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -452,6 +542,9 @@ export default function AdminNavigationPage() {
                       <div className="flex-1">
                         <h4 className="font-medium">{page.title}</h4>
                         <p className="text-sm text-muted-foreground">/page/{page.slug}</p>
+                        {page.addToFooter && (
+                          <span className="text-xs text-primary">• Footer में visible</span>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" onClick={() => editCustomPage(page)}>
@@ -476,7 +569,7 @@ export default function AdminNavigationPage() {
 
         {/* Custom Page Dialog */}
         <Dialog open={isCustomPageDialogOpen} onOpenChange={setIsCustomPageDialogOpen}>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingPage ? 'Edit Page' : 'Create New Page'}</DialogTitle>
               <DialogDescription>
@@ -484,33 +577,51 @@ export default function AdminNavigationPage() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Page Title</label>
-                <Input
-                  value={pageTitle}
-                  onChange={(e) => {
-                    setPageTitle(e.target.value);
-                    if (!editingPage) {
-                      setPageSlug(generateSlug(e.target.value));
-                    }
-                  }}
-                  placeholder="e.g., Services, Portfolio, Resources"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">URL Slug</label>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">/page/</span>
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Page Title *</Label>
                   <Input
-                    value={pageSlug}
-                    onChange={(e) => setPageSlug(generateSlug(e.target.value))}
-                    placeholder="services"
+                    value={pageTitle}
+                    onChange={(e) => {
+                      setPageTitle(e.target.value);
+                      if (!editingPage) {
+                        setPageSlug(generateSlug(e.target.value));
+                      }
+                    }}
+                    placeholder="e.g., Services, Portfolio, Resources"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">This will be the URL of your page</p>
+                <div className="space-y-2">
+                  <Label>URL Slug *</Label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground text-sm">/page/</span>
+                    <Input
+                      value={pageSlug}
+                      onChange={(e) => setPageSlug(generateSlug(e.target.value))}
+                      placeholder="services"
+                    />
+                  </div>
+                </div>
               </div>
+
+              {/* Featured Image */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Page Content (Markdown)</label>
+                <Label>Featured Image (Optional)</Label>
+                <ImageUpload
+                  value={pageFeaturedImage}
+                  onChange={setPageFeaturedImage}
+                  placeholder="Upload featured image for this page"
+                  aspectRatio="wide"
+                />
+              </div>
+
+              {/* Content Editor with Image Insert */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label>Page Content (Markdown)</Label>
+                  <ContentImageUploader onImageInsert={insertImageToContent} />
+                </div>
                 <Textarea
                   value={pageContent}
                   onChange={(e) => setPageContent(e.target.value)}
@@ -523,14 +634,59 @@ Your content...
 
 ## Section 2
 More content..."
-                  rows={12}
+                  rows={10}
                   className="font-mono text-sm"
                 />
                 <p className="text-xs text-muted-foreground">
-                  Use Markdown for formatting: # Heading, **bold**, *italic*, - lists, etc.
+                  Use Markdown: # Heading, **bold**, *italic*, - lists, ![Image](url)
                 </p>
               </div>
-              <div className="flex justify-end gap-2">
+
+              {/* SEO Settings */}
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="seo">
+                  <AccordionTrigger className="text-sm font-medium">
+                    SEO Settings (Optional)
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-2">
+                    <div className="space-y-2">
+                      <Label>Meta Title</Label>
+                      <Input
+                        value={pageMetaTitle}
+                        onChange={(e) => setPageMetaTitle(e.target.value)}
+                        placeholder="Custom title for search engines (leave empty to use page title)"
+                        maxLength={60}
+                      />
+                      <p className="text-xs text-muted-foreground">{pageMetaTitle.length}/60 characters</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Meta Description</Label>
+                      <Textarea
+                        value={pageMetaDescription}
+                        onChange={(e) => setPageMetaDescription(e.target.value)}
+                        placeholder="Brief description for search results..."
+                        rows={3}
+                        maxLength={160}
+                      />
+                      <p className="text-xs text-muted-foreground">{pageMetaDescription.length}/160 characters</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+
+              {/* Footer Toggle */}
+              <div className="flex items-center justify-between p-4 border border-border rounded-lg bg-muted/30">
+                <div>
+                  <Label>Add to Footer</Label>
+                  <p className="text-xs text-muted-foreground">Automatically add this page link to footer</p>
+                </div>
+                <Switch
+                  checked={addToFooter}
+                  onCheckedChange={setAddToFooter}
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setIsCustomPageDialogOpen(false)}>
                   Cancel
                 </Button>
@@ -543,5 +699,46 @@ More content..."
         </Dialog>
       </div>
     </AdminLayout>
+  );
+}
+
+// Component to upload and insert images into content
+function ContentImageUploader({ onImageInsert }: { onImageInsert: (url: string) => void }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+
+  const handleInsert = () => {
+    if (imageUrl) {
+      onImageInsert(imageUrl);
+      setImageUrl('');
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+        <ImageIcon className="h-4 w-4 mr-1" />
+        Insert Image
+      </Button>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Insert Image</DialogTitle>
+          <DialogDescription>Upload or paste an image URL to insert into content</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <ImageUpload
+            value={imageUrl}
+            onChange={setImageUrl}
+            placeholder="Upload image"
+            aspectRatio="video"
+          />
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
+            <Button onClick={handleInsert} disabled={!imageUrl}>Insert</Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
