@@ -145,22 +145,22 @@ export default function ProjectsPage() {
                   className="pl-10 transition-all duration-200 focus:shadow-md focus:shadow-primary/10"
                 />
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide md:flex-wrap md:overflow-visible">
                 <Button
                   variant={selectedTech === null ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedTech(null)}
-                  className="transition-all duration-200 hover:-translate-y-0.5"
+                  className="transition-all duration-200 hover:-translate-y-0.5 flex-shrink-0"
                 >
                   All
                 </Button>
-                {allTechStacks.slice(0, 5).map((tech) => (
+                {allTechStacks.map((tech) => (
                   <Button
                     key={tech}
                     variant={selectedTech === tech ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setSelectedTech(tech)}
-                    className="transition-all duration-200 hover:-translate-y-0.5"
+                    className="transition-all duration-200 hover:-translate-y-0.5 flex-shrink-0"
                   >
                     {tech}
                   </Button>
