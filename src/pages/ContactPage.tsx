@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Send, Github, Linkedin, Twitter, AlertCircle, Phone } from 'lucide-react';
+import { Mail, Send, Github, Linkedin, Twitter, AlertCircle, Phone, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
 import { z } from 'zod';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { ContactReason } from '@/types/portfolio';
+import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 const REASON_OPTIONS: { value: ContactReason; label: string }[] = [
   { value: 'hiring-fulltime', label: 'Hiring – Full Time' },
@@ -190,21 +191,14 @@ export default function ContactPage() {
 
   return (
     <MainLayout>
-      <div className="py-20">
+      <PageHeroBanner
+        title="Get In Touch"
+        description="Have a project in mind or want to collaborate? I'd love to hear from you."
+        icon={<MessageSquare className="h-7 w-7" />}
+        pattern="waves"
+      />
+      <div className="pb-20">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Get In Touch</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Have a project in mind or want to collaborate? I'd love to hear from you.
-            </p>
-          </motion.div>
 
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12">

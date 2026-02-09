@@ -3,6 +3,7 @@ import { Code2, Server, Database, Wrench } from 'lucide-react';
 import { useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
+import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 const categoryIcons = {
   frontend: Code2,
@@ -132,28 +133,15 @@ export default function SkillsPage() {
 
   return (
     <MainLayout>
-      <div className="py-20">
+      <PageHeroBanner
+        title="Skills & Technologies"
+        description="Technologies and tools I use to build amazing products"
+        subtitle="Expertise"
+        icon={<Code2 className="h-7 w-7" />}
+        pattern="circuit"
+      />
+      <div className="pb-20">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-center mb-16"
-          >
-            <motion.span 
-              className="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.35 }}
-            >
-              Expertise
-            </motion.span>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Skills & Technologies</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Technologies and tools I use to build amazing products
-            </p>
-          </motion.div>
 
           {/* Skills Grid */}
           <div className="max-w-5xl mx-auto space-y-16">

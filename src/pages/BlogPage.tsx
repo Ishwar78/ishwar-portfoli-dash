@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Badge } from '@/components/ui/badge';
+import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 export default function BlogPage() {
   const { blogs } = usePortfolio();
@@ -12,19 +13,14 @@ export default function BlogPage() {
 
   return (
     <MainLayout>
-      <div className="py-20">
+      <PageHeroBanner
+        title="Blog"
+        description="Thoughts, tutorials, and insights about software development"
+        icon={<BookOpen className="h-7 w-7" />}
+        pattern="diagonal"
+      />
+      <div className="pb-20">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Thoughts, tutorials, and insights about software development
-            </p>
-          </motion.div>
 
           {/* Blog Grid */}
           <div className="max-w-4xl mx-auto">

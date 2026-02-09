@@ -3,6 +3,7 @@ import { Briefcase, Calendar } from 'lucide-react';
 import { useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
+import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 interface TimelineCardProps {
   experience: {
@@ -97,20 +98,14 @@ export default function ExperiencePage() {
 
   return (
     <MainLayout>
-      <div className="py-20">
+      <PageHeroBanner
+        title="Work Experience"
+        description="My professional journey and career milestones"
+        icon={<Briefcase className="h-7 w-7" />}
+        pattern="grid"
+      />
+      <div className="pb-20">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Work Experience</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              My professional journey and career milestones
-            </p>
-          </motion.div>
 
           {/* Timeline */}
           <div className="max-w-3xl mx-auto">
