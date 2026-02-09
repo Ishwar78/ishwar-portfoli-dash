@@ -1,12 +1,13 @@
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ExternalLink, Github, Search } from 'lucide-react';
+import { ExternalLink, Github, Search, FolderKanban } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 interface ProjectCardProps {
   project: {
@@ -112,20 +113,14 @@ export default function ProjectsPage() {
 
   return (
     <MainLayout>
-      <div className="py-20">
+      <PageHeroBanner
+        title="Projects"
+        description="A collection of my work, side projects, and experiments"
+        icon={<FolderKanban className="h-7 w-7" />}
+        pattern="hexagons"
+      />
+      <div className="pb-20">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Projects</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              A collection of my work, side projects, and experiments
-            </p>
-          </motion.div>
 
           {/* Filters */}
           <motion.div

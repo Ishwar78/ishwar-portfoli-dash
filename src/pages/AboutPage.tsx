@@ -1,10 +1,11 @@
 import { motion, useInView } from 'framer-motion';
-import { Briefcase, GraduationCap, Award, Lightbulb, Building2 } from 'lucide-react';
+import { Briefcase, GraduationCap, Award, Lightbulb, Building2, User } from 'lucide-react';
 import { useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { PageHeroBanner } from '@/components/PageHeroBanner';
 
 // Animation variants following minimal, professional guidelines
 const containerVariants = {
@@ -143,20 +144,14 @@ export default function AboutPage() {
 
   return (
     <MainLayout>
-      <div className="py-20">
+      <PageHeroBanner
+        title="About Me"
+        description="Get to know more about my journey and what drives me"
+        icon={<User className="h-7 w-7" />}
+        pattern="dots"
+      />
+      <div className="pb-20">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Get to know more about my journey and what drives me
-            </p>
-          </motion.div>
 
           <div className="max-w-4xl mx-auto">
             {/* Profile Section */}
