@@ -5,8 +5,16 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Badge } from '@/components/ui/badge';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
+import { useSEO, DOMAIN } from '@/hooks/useSEO';
 
 export default function BlogPage() {
+  useSEO({
+    title: 'Blog | Ishwar - Web Development Tutorials & Insights',
+    description: 'Read web development articles, tutorials, and insights by Ishwar. Topics include React, TypeScript, Node.js, and modern web technologies.',
+    keywords: 'web development blog, React tutorials, TypeScript guide, Node.js tips, programming blog, software development articles',
+    canonical: `${DOMAIN}/blog`,
+  });
+
   const { blogs } = usePortfolio();
 
   const publishedBlogs = blogs.filter((blog) => blog.published);

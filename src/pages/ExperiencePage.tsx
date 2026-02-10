@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
+import { useSEO, DOMAIN } from '@/hooks/useSEO';
 
 interface TimelineCardProps {
   experience: {
@@ -86,6 +87,13 @@ function TimelineCard({ experience, index }: TimelineCardProps) {
 }
 
 export default function ExperiencePage() {
+  useSEO({
+    title: 'Work Experience | Ishwar - Web Developer',
+    description: 'Professional work experience of Ishwar - Full Stack Web Developer. Career timeline, roles, and achievements in software development.',
+    keywords: 'web developer experience, software engineer career, full stack developer jobs, React developer experience, work history',
+    canonical: `${DOMAIN}/experience`,
+  });
+
   const { experiences } = usePortfolio();
   const timelineRef = useRef(null);
   const timelineInView = useInView(timelineRef, { once: true, margin: '-100px' });

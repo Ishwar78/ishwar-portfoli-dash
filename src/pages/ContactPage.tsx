@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { ContactReason } from '@/types/portfolio';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
+import { useSEO, DOMAIN } from '@/hooks/useSEO';
 
 const REASON_OPTIONS: { value: ContactReason; label: string }[] = [
   { value: 'hiring-fulltime', label: 'Hiring – Full Time' },
@@ -67,6 +68,13 @@ interface FormErrors {
 }
 
 export default function ContactPage() {
+  useSEO({
+    title: 'Contact Ishwar | Hire a Web Developer',
+    description: 'Contact Ishwar for web development projects, freelance work, or full-time opportunities. Skilled in React, Node.js, TypeScript. Get in touch today!',
+    keywords: 'contact web developer, hire web developer, freelance developer, web development services, hire React developer, contact Ishwar',
+    canonical: `${DOMAIN}/contact`,
+  });
+
   const { siteSettings, setMessages } = usePortfolio();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
