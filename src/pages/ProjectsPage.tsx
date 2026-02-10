@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
+import { useSEO, DOMAIN } from '@/hooks/useSEO';
 
 interface ProjectCardProps {
   project: {
@@ -93,6 +94,13 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 }
 
 export default function ProjectsPage() {
+  useSEO({
+    title: 'Projects | Ishwar - Web Developer Portfolio',
+    description: 'Explore web development projects by Ishwar. E-commerce platforms, task management apps, and more built with React, Node.js, TypeScript.',
+    keywords: 'web developer projects, portfolio projects, React projects, Node.js projects, full stack projects, web applications, software projects',
+    canonical: `${DOMAIN}/projects`,
+  });
+
   const { projects } = usePortfolio();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTech, setSelectedTech] = useState<string | null>(null);

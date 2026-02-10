@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { usePortfolio } from '@/contexts/PortfolioContext';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
+import { useSEO, DOMAIN } from '@/hooks/useSEO';
 
 const categoryIcons = {
   frontend: Code2,
@@ -119,6 +120,13 @@ function CategorySection({ category, skills, categoryIndex }: CategorySectionPro
 }
 
 export default function SkillsPage() {
+  useSEO({
+    title: 'Skills & Technologies | Ishwar - Web Developer',
+    description: 'Technical skills of Ishwar - React, Node.js, TypeScript, JavaScript, PostgreSQL, MongoDB, Docker, AWS. Frontend & backend development expertise.',
+    keywords: 'web developer skills, React, Node.js, TypeScript, JavaScript, frontend developer, backend developer, technical skills, programming languages',
+    canonical: `${DOMAIN}/skills`,
+  });
+
   const { skills } = usePortfolio();
 
   const skillsByCategory = skills.reduce((acc, skill) => {

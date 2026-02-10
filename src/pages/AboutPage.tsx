@@ -6,6 +6,7 @@ import { usePortfolio } from '@/contexts/PortfolioContext';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { PageHeroBanner } from '@/components/PageHeroBanner';
+import { useSEO, DOMAIN } from '@/hooks/useSEO';
 
 // Animation variants following minimal, professional guidelines
 const containerVariants = {
@@ -112,6 +113,13 @@ function AnimatedCard({ children, className, index = 0 }: AnimatedCardProps) {
 }
 
 export default function AboutPage() {
+  useSEO({
+    title: 'About Ishwar | Web Developer & Full Stack Developer',
+    description: 'Learn about Ishwar - experienced Web Developer & Full Stack Developer. Skills in React, Node.js, TypeScript. Education, experience & career highlights.',
+    keywords: 'about Ishwar, web developer bio, full stack developer experience, React developer, software engineer background',
+    canonical: `${DOMAIN}/about`,
+  });
+
   const { aboutContent, siteSettings, skills, experiences } = usePortfolio();
 
   // Handle legacy string format for education
